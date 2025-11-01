@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(0 0% 3.9%);
+  --color-border: hsl(0 0% 89.8%);
+  --color-input: hsl(0 0% 89.8%);
+  --color-ring: hsl(0 0% 3.9%);
+  --color-primary: hsl(0 0% 9%);
+  --color-primary-foreground: hsl(0 0% 98%);
+  --color-secondary: hsl(0 0% 96.1%);
+  --color-secondary-foreground: hsl(0 0% 9%);
+  --color-muted: hsl(0 0% 96.1%);
+  --color-muted-foreground: hsl(0 0% 45.1%);
+  --color-accent: hsl(0 0% 96.1%);
+  --color-accent-foreground: hsl(0 0% 9%);
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --color-background: hsl(0 0% 3.9%);
+  --color-foreground: hsl(0 0% 98%);
+  --color-border: hsl(0 0% 14.9%);
+  --color-input: hsl(0 0% 14.9%);
+  --color-ring: hsl(0 0% 83.1%);
+  --color-primary: hsl(0 0% 98%);
+  --color-primary-foreground: hsl(0 0% 9%);
+  --color-secondary: hsl(0 0% 14.9%);
+  --color-secondary-foreground: hsl(0 0% 98%);
+  --color-muted: hsl(0 0% 14.9%);
+  --color-muted-foreground: hsl(0 0% 63.9%);
+  --color-accent: hsl(0 0% 14.9%);
+  --color-accent-foreground: hsl(0 0% 98%);
+  --color-destructive: hsl(0 62.8% 30.6%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    @apply transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .gradient-title {
+    @apply bg-gradient-to-b from-gray-400 via-gray-200 to-gray-600 font-extrabold tracking-tighter text-transparent bg-clip-text pb-2 pr-2;
+  }
+  .gradient {
+    @apply bg-gradient-to-r from-primary to-primary/70;
+  }
+  .hero-image-wrapper { perspective: 1000px; }
+  .hero-image { transform: rotateX(15deg) scale(1); transition: transform 0.5s ease-out; will-change: transform; }
+  .hero-image.scrolled { transform: rotateX(0deg) scale(1) translateY(40px); }
+  .grid-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: -1; }
+  .grid-background::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.9)); }
+}
+

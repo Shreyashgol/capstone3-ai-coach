@@ -1,0 +1,248 @@
+import { CoverLetterModel } from '../models/index.js';
+
+class CoverLetterController {
+  static getUserId(req) {
+    return req.userId || req.header('x-user-id');
+  }
+
+  static async getCoverLetters(req, res) {
+    try {
+      const userId = CoverLetterController.getUserId(req);
+      
+      if (!userId) {
+        return res.status(401).json({ 
+          error: 'Unauthorized' 
+        });
+      }
+
+      const coverLetters = await CoverLetterModel.findByUserId(userId);
+      res.json({ coverLetters });
+    } catch (error) {
+      console.error('Get cover letters error:', error);
+      res.status(500).json({ 
+        error: 'Failed to get cover letters' 
+      });
+    }
+  }
+
+  static async getCoverLetter(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = CoverLetterController.getUserId(req);
+      
+      if (!userId) {
+        return res.status(401).json({ 
+          error: 'Unauthorized' 
+        });
+      }
+
+      const coverLetter = await CoverLetterModel.findById(id);
+      
+      if (!coverLetter) {
+        return res.status(404).json({ 
+          error: 'Cover letter not found' 
+        });
+      }
+
+      // Check if user owns this cover letter
+      if (coverLetter.userId !== userId) {
+        return res.status(403).json({ 
+          error: 'Access denied' 
+        });
+      }
+
+      res.json({ coverLetter });
+    } catch (error) {
+      console.error('Get cover letter error:', error);
+      res.status(500).json({ 
+        error: 'Failed to get cover letter' 
+      });
+    }
+  }
+
+  static async createCoverLetter(req, res) {
+    try {
+      const userId = CoverLetterController.getUserId(req);
+      
+      if (!userId) {
+        return res.status(401).json({ 
+          error: 'Unauthorized' 
+        });
+      }
+
+      const { 
+        content, 
+        jobDescription, 
+        companyName, 
+        jobTitle, 
+        status = 'draft' 
+      } = req.body;
+
+      if (!content || !companyName || !jobTitle) {
+        return res.status(400).json({ 
+          error: 'Content, company name, and job title are required' 
+        });
+      }
+
+      const coverLetter = await CoverLetterModel.create({
+        userId,
+        content,
+        jobDescription,
+        companyName,
+        jobTitle,
+        status
+      });
+
+      res.status(201).json({ 
+        message: 'Cover letter created successfully',
+        coverLetter 
+      });
+    } catch (error) {
+      console.error('Create cover letter error:', error);
+      res.status(500).json({ 
+        error: 'Failed to create cover letter' 
+      });
+    }
+  }
+
+  static async updateCoverLetter(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = CoverLetterController.getUserId(req);
+      
+      if (!userId) {
+        return res.status(401).json({ 
+          error: 'Unauthorized' 
+        });
+      }
+
+      // Check if cover letter exists and user owns it
+      const existingCoverLetter = await CoverLetterModel.findById(id);
+      if (!existingCoverLetter) {
+        return res.status(404).json({ 
+          error: 'Cover letter not found' 
+        });
+      }
+
+      if (existingCoverLetter.userId !== userId) {
+        return res.status(403).json({ 
+          error: 'Access denied' 
+        });
+      }
+
+      const { 
+        content, 
+        jobDescription, 
+        companyName, 
+        jobTitle, 
+        status 
+      } = req.body;
+
+      const updateData = {};
+      if (content !== undefined) updateData.content = content;
+      if (jobDescription !== undefined) updateData.jobDescription = jobDescription;
+      if (companyName !== undefined) updateData.companyName = companyName;
+      if (jobTitle !== undefined) updateData.jobTitle = jobTitle;
+      if (status !== undefined) updateData.status = status;
+
+      const coverLetter = await CoverLetterModel.update(id, updateData);
+
+      res.json({ 
+        message: 'Cover letter updated successfully',
+        coverLetter 
+      });
+    } catch (error) {
+      console.error('Update cover letter error:', error);
+      res.status(500).json({ 
+        error: 'Failed to update cover letter' 
+      });
+    }
+  }
+
+  static async deleteCoverLetter(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = CoverLetterController.getUserId(req);
+      
+      if (!userId) {
+        return res.status(401).json({ 
+          error: 'Unauthorized' 
+        });
+      }
+
+      // Check if cover letter exists and user owns it
+      const existingCoverLetter = await CoverLetterModel.findById(id);
+      if (!existingCoverLetter) {
+        return res.status(404).json({ 
+          error: 'Cover letter not found' 
+        });
+      }
+
+      if (existingCoverLetter.userId !== userId) {
+        return res.status(403).json({ 
+          error: 'Access denied' 
+        });
+      }
+
+      await CoverLetterModel.delete(id);
+
+      res.json({ 
+        message: 'Cover letter deleted successfully' 
+      });
+    } catch (error) {
+      console.error('Delete cover letter error:', error);
+      res.status(500).json({ 
+        error: 'Failed to delete cover letter' 
+      });
+    }
+  }
+
+  static async updateStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = CoverLetterController.getUserId(req);
+      
+      if (!userId) {
+        return res.status(401).json({ 
+          error: 'Unauthorized' 
+        });
+      }
+
+      // Check if cover letter exists and user owns it
+      const existingCoverLetter = await CoverLetterModel.findById(id);
+      if (!existingCoverLetter) {
+        return res.status(404).json({ 
+          error: 'Cover letter not found' 
+        });
+      }
+
+      if (existingCoverLetter.userId !== userId) {
+        return res.status(403).json({ 
+          error: 'Access denied' 
+        });
+      }
+
+      const { status } = req.body;
+
+      if (!status) {
+        return res.status(400).json({ 
+          error: 'Status is required' 
+        });
+      }
+
+      const coverLetter = await CoverLetterModel.updateStatus(id, status);
+
+      res.json({ 
+        message: 'Cover letter status updated successfully',
+        coverLetter 
+      });
+    } catch (error) {
+      console.error('Update cover letter status error:', error);
+      res.status(500).json({ 
+        error: 'Failed to update cover letter status' 
+      });
+    }
+  }
+}
+
+export default CoverLetterController;
