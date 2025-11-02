@@ -1,8 +1,53 @@
-import { CoverLetterModel } from '../models/index.js';
+import { CoverLetterModel, UserModel } from '../models/index.js';
+import AIService from '../services/AIService.js';
 
 class CoverLetterController {
   static getUserId(req) {
     return req.userId || req.header('x-user-id');
+  }
+
+  static async generateCoverLetter(req, res) {
+    try {
+      const userId = CoverLetterController.getUserId(req);
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const user = req.userId
+        ? await UserModel.findById(req.userId)
+        : await UserModel.findByClerkUserId(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const { jobTitle, companyName, jobDescription } = req.body || {};
+      
+      if (!jobTitle || !companyName) {
+        return res.status(400).json({ 
+          error: "Job title and company name are required" 
+        });
+      }
+
+      const aiService = new AIService();
+      const resumeText = `${user.bio}\nSkills: ${(user.skills || []).join(", ")}\nExperience: ${user.experience} years in ${user.industry}`;
+      
+      const aiResult = await aiService.generateCoverLetter(resumeText, jobDescription, companyName, jobTitle);
+      
+      const coverLetter = await CoverLetterModel.create({
+        userId: user.id,
+        content: aiResult.content,
+        jobDescription,
+        companyName,
+        jobTitle,
+        status: "completed"
+      });
+
+      res.json(coverLetter);
+    } catch (err) {
+      console.error("Generate cover letter error:", err);
+      res.status(500).json({ error: "Failed to generate cover letter" });
+    }
   }
 
   static async getCoverLetters(req, res) {
