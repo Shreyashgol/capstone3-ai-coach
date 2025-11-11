@@ -23,9 +23,13 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchInsights = async () => {
       try {
-        const res = await fetch('/api/dashboard', { headers })
-        const data = await res.json()
-        setInsights(data)
+        const [statsRes, insightsRes] = await Promise.all([
+          fetch('/api/dashboard/stats', { headers }),
+          fetch('/api/dashboard/insights', { headers })
+        ])
+        const stats = await statsRes.json()
+        const insights = await insightsRes.json()
+        setInsights({ ...stats, ...insights })
       } catch (error) {
         console.error('Failed to fetch insights:', error)
       } finally {

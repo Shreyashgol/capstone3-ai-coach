@@ -17,7 +17,7 @@ export default function Interview() {
         headers
       })
       const data = await res.json()
-      setQuestions(Array.isArray(data) ? data : [])
+      setQuestions(Array.isArray(data.questions) ? data.questions : [])
     } finally {
       setLoading(false)
     }
