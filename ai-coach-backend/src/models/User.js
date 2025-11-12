@@ -32,15 +32,26 @@ export class UserModel {
   }
 
   static async create(userData) {
+    // Set clerkUserId to the generated user ID for JWT auth compatibility
+    const createData = {
+      ...userData,
+      clerkUserId: userData.clerkUserId || null // Will be set after user creation
+    };
+    
     const user = await db.user.create({
-      data: userData
+      data: createData
     });
     
-    // For compatibility, set clerkUserId to id if not provided
+    // Update clerkUserId to the user's ID for compatibility
     if (!userData.clerkUserId) {
       await db.user.update({
         where: { id: user.id },
         data: { clerkUserId: user.id }
+      });
+      
+      // Return updated user with clerkUserId
+      return await db.user.findUnique({
+        where: { id: user.id }
       });
     }
     
