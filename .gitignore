@@ -1,2 +1,3 @@
 .DS_Store
-.env
+ai-coach-frontend/.env
+ai-coach-backend/.env
