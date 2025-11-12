@@ -142,7 +142,7 @@ The backend is pre-configured for Render deployment:
 - `JWT_SECRET` - JWT signing secret
 - `NODE_ENV` - Set to `production`
 
-### Frontend (Vercel/Netlify)
+### Frontend (Vercel)
 Deploy the frontend to your preferred static hosting:
 
 1. **Push code to GitHub**
@@ -210,26 +210,6 @@ npm test
 
 # Run E2E tests
 npm run test:e2e
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-**Backend (.env)**
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/crekAI"
-GOOGLE_AI_API_KEY="your_google_ai_api_key"
-JWT_SECRET="your_jwt_secret_key"
-NODE_ENV="development"
-PORT=4000
-```
-
-**Frontend (.env)**
-```env
-VITE_API_URL="http://localhost:4000"
-VITE_CLERK_PUBLISHABLE_KEY="your_clerk_key"
-VITE_GOOGLE_AI_API_KEY="your_google_ai_key"
 ```
 
 ## 📊 Database Schema
