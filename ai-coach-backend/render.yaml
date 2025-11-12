@@ -10,7 +10,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000
+        value: 4000
     healthCheckPath: /health
 
   # PostgreSQL Database
@@ -18,5 +18,5 @@ services:
     name: ai-coach-db
     plan: free
     user: ai_coach_user
-    database: ai_coach_db
+    database: ai_coach_db_urrr
     ipAllowList: []
