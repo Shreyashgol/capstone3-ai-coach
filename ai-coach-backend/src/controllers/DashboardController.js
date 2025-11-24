@@ -7,17 +7,17 @@ class DashboardController {
   }
 
   static getUserId(req) {
-    return req.userId || req.header('x-user-id');
+    return req.userId;
   }
 
   static async getIndustryInsights(req, res) {
     try {
-      const clerkUserId = req.header('x-user-id');
-      if (!clerkUserId) {
+      const userId = DashboardController.getUserId(req);
+      if (!userId) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      const user = await UserModel.findByClerkUserId(clerkUserId);
+      const user = await UserModel.findById(userId);
       
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
@@ -39,12 +39,12 @@ class DashboardController {
 
   static async refreshIndustryInsights(req, res) {
     try {
-      const clerkUserId = req.header('x-user-id');
-      if (!clerkUserId) {
+      const userId = DashboardController.getUserId(req);
+      if (!userId) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      const user = await UserModel.findByClerkUserId(clerkUserId);
+      const user = await UserModel.findById(userId);
       
       if (!user) {
         return res.status(404).json({ error: 'User not found' });

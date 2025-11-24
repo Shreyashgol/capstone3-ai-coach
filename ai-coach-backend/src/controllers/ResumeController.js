@@ -2,7 +2,7 @@ import { ResumeModel } from '../models/index.js';
 
 class ResumeController {
   static getUserId(req) {
-    return req.userId || req.header('x-user-id');
+    return req.userId;
   }
 
   static async getResume(req, res) {

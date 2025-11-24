@@ -7,7 +7,7 @@ class InterviewController {
   }
 
   static getUserId(req) {
-    return req.userId || req.header('x-user-id');
+    return req.userId;
   }
 
   static async generateQuiz(req, res) {

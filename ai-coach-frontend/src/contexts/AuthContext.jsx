@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api.js';
 
 const AuthContext = createContext();
 
@@ -18,9 +18,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
-      delete axios.defaults.headers.common['Authorization'];
+      delete api.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
@@ -28,13 +28,14 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       if (token) {
         try {
-          const response = await axios.get('/api/auth/me');
+          const response = await api.get('/auth/me');
           setUser(response.data.user);
         } catch (error) {
           console.error('Auth check failed:', error);
           localStorage.removeItem('token');
           setToken(null);
           setUser(null);
+          setLoading(false);
         }
       }
       setLoading(false);
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password });
       const { token: userToken, user: userData } = response.data;
       
       localStorage.setItem('token', userToken);
@@ -64,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password, name) => {
     try {
-      const response = await axios.post('/api/auth/register', { 
+      const response = await api.post('/auth/register', { 
         email, 
         password, 
         name 
@@ -87,16 +88,14 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      // Call backend logout endpoint
-      await axios.post('/api/auth/logout');
+      await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Always clear local state even if backend call fails
       localStorage.removeItem('token');
       setToken(null);
       setUser(null);
-      delete axios.defaults.headers.common['Authorization'];
+      delete api.defaults.headers.common['Authorization'];
     }
   };
 
@@ -116,3 +115,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

@@ -15,7 +15,12 @@ export default function CoverLetters() {
       try {
         const res = await fetch('/api/cover-letters', { headers })
         const data = await res.json()
-        setItems(Array.isArray(data) ? data : [])
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.coverLetters)
+            ? data.coverLetters
+            : []
+        setItems(list)
       } catch {}
     }
     run()

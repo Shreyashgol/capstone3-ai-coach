@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import PDFDocument from "pdfkit";
 import { db } from "../db/prisma.js";
 
 const router = Router();
@@ -66,15 +67,74 @@ router.post('/improve', async (req, res) => {
     if (!current || !type) {
       return res.status(400).json({ error: "Current content and type are required" });
     }
-    
-    // For now, return a mock improved version
-    // TODO: Configure proper Gemini API key
-    const improved = `Enhanced ${type}: Led the development and deployment of scalable software solutions, resulting in a 40% improvement in system performance and a 25% reduction in operational costs. Implemented best practices in software engineering, mentored junior developers, and successfully delivered 15+ projects on time using agile methodologies.`;
-    
+
+    const industry = user.industry || "general";
+
+    const prompt = `
+      You are a professional resume writer.
+      Improve the following section of a resume for a candidate in the "${industry}" industry.
+
+      Section type: ${type}
+
+      Original section:
+      """
+      ${current}
+      """
+
+      Return ONLY the improved text for this section, ready to be pasted into a resume.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    const improved = text.trim();
+
     res.json({ improved });
   } catch (err) {
     console.error('Resume improvement error:', err);
     res.status(500).json({ error: "Failed to improve content: " + err.message });
+  }
+});
+
+router.get('/pdf', async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+    const user = req.userId
+      ? await db.user.findUnique({ where: { id: req.userId } })
+      : await db.user.findUnique({ where: { clerkUserId: userId } });
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const resume = await db.resume.findUnique({ where: { userId: user.id } });
+    if (!resume) return res.status(404).json({ error: "Resume not found" });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="resume.pdf"');
+
+    const doc = new PDFDocument({ margin: 50 });
+    doc.pipe(res);
+
+    if (user.name || user.email) {
+      doc.fontSize(18).text(user.name || 'Your Name', { align: 'center' });
+      if (user.email) {
+        doc.moveDown(0.5);
+        doc.fontSize(12).text(user.email, { align: 'center' });
+      }
+      doc.moveDown();
+    }
+
+    doc.fontSize(12).text(resume.content, {
+      align: 'left'
+    });
+
+    doc.end();
+  } catch (err) {
+    console.error('Resume PDF error:', err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to generate resume PDF" });
+    }
   }
 });
 

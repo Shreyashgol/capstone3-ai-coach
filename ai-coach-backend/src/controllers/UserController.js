@@ -2,7 +2,7 @@ import { UserModel } from '../models/index.js';
 
 class UserController {
   static getUserId(req) {
-    return req.userId || req.header('x-user-id');
+    return req.userId;
   }
 
   static async getOnboardingStatus(req, res) {
