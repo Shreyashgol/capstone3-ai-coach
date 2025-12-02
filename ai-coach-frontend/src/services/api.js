@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4001',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -35,10 +35,10 @@ api.interceptors.response.use(
 );
 
 export const authAPI = {
-  login: (email, password) => api.post('/auth/login', { email, password }),
-  register: (email, password, name) => api.post('/auth/register', { email, password, name }),
-  getMe: () => api.get('/auth/me'),
-  logout: () => api.post('/auth/logout'),
+  login: (email, password) => api.post('/api/auth/login', { email, password }),
+  register: (email, password, name) => api.post('/api/auth/register', { email, password, name }),
+  getMe: () => api.get('/api/auth/me'),
+  logout: () => api.post('/api/auth/logout'),
 };
 
 export default api;

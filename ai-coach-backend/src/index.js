@@ -19,7 +19,7 @@ const app = express();
 // CORS configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://ai-coach-frontend.onrender.com', 'https://ai-coach.onrender.com']
+    ? ['https://ai-coach-frontend.onrender.com', 'https://ai-coach.onrender.com', 'https://capstone3-ai-coach-3to1.vercel.app', /\.vercel\.app$/]
     : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -29,6 +29,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "1mb" }));
 app.use(authMiddleware);
+
+// Root route
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "🚀 AI Coach Backend API",
+    version: "1.0.0",
+    status: "running",
+    endpoints: {
+      health: "/health",
+      auth: "/api/auth/*",
+      coverLetters: "/api/cover-letters/*",
+      interview: "/api/interview/*",
+      user: "/api/user/*",
+      resume: "/api/resume/*",
+      dashboard: "/api/dashboard/*"
+    }
+  });
+});
 
 // Health check
 app.get("/health", async (req, res) => {

@@ -10,18 +10,19 @@ This guide will help you deploy the AI Coach platform to Render.com with manual 
 
 ## 🔧 Step-by-Step Deployment
 
-### 1. Create PostgreSQL Database
+### 1. PostgreSQL Database (Neon)
 
-1. Log in to your Render dashboard
-2. Click "New +" → "PostgreSQL"
-3. Configure:
-   - **Name**: `ai-coach-db`
-   - **Database**: `ai_coach`
-   - **User**: `ai_coach_user`
-   - **Region**: Choose closest to your users
-   - **Plan**: Free
-4. Click "Create Database"
-5. **Save the connection details** - you'll need the External Database URL
+✅ **Already completed** - You've deployed PostgreSQL on Neon
+
+Make sure you have:
+- **Database connection string** from Neon dashboard
+- **Database is accessible** and running
+- **Connection string format**: `postgresql://username:password@host/database?sslmode=require`
+
+💡 **Neon Benefits**: 
+- Serverless PostgreSQL with automatic scaling
+- Better performance than Render's free PostgreSQL
+- Generous free tier with branching capabilities
 
 ### 2. Deploy Backend Service
 
@@ -48,24 +49,30 @@ This guide will help you deploy the AI Coach platform to Render.com with manual 
 
 5. Click "Create Web Service"
 
-### 3. Deploy Frontend Service
+### 3. Deploy Frontend on Vercel
 
-1. Click "New +" → "Static Site"
-2. Connect your GitHub repository
-3. Configure:
-   - **Name**: `ai-coach-frontend`
-   - **Branch**: `main`
+1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+2. Click "New Project"
+3. Import your GitHub repository: `capstone3-ai-coach`
+4. Configure:
+   - **Framework Preset**: Vite (auto-detected)
    - **Root Directory**: `ai-coach-frontend`
-   - **Build Command**: `npm install && npm run build`
-   - **Publish Directory**: `dist`
+   - **Build Command**: `npm run build` (auto-detected)
+   - **Output Directory**: `dist` (auto-detected)
 
-4. **Environment Variables**:
+5. **Environment Variables**:
    ```
    VITE_API_URL=https://ai-coach-backend.onrender.com
    ```
    (Replace with your actual backend URL once deployed)
 
-5. Click "Create Static Site"
+6. Click "Deploy"
+
+✅ **Vercel Benefits**: 
+- Automatic deployments on git push
+- Global CDN for fast loading
+- Perfect for Vite/React apps
+- Free SSL certificates
 
 ### 4. Manual Setup Steps
 
@@ -91,8 +98,8 @@ This guide will help you deploy the AI Coach platform to Render.com with manual 
 
 After deployment, you'll get these URLs:
 - **Backend API**: `https://ai-coach-backend.onrender.com`
-- **Frontend App**: `https://ai-coach-frontend.onrender.com`
-- **Database**: Internal PostgreSQL (managed by Render)
+- **Frontend App**: `https://your-project.vercel.app`
+- **Database**: Neon PostgreSQL (serverless)
 
 ## 🔍 Verification Steps
 

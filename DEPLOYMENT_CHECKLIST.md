@@ -22,10 +22,11 @@ Use this checklist to ensure a smooth deployment to Render.com.
 
 ## 🚀 Deployment Steps
 
-### Step 1: Database Setup
-- [ ] Create PostgreSQL database on Render
-- [ ] Note down the External Database URL
+### Step 1: Database Setup (Neon)
+- [x] PostgreSQL database created on Neon
+- [ ] Note down the Neon connection string
 - [ ] Database is accessible and running
+- [ ] SSL mode is enabled (required for Neon)
 
 ### Step 2: Backend Deployment
 - [ ] Create Web Service on Render
@@ -39,13 +40,14 @@ Use this checklist to ensure a smooth deployment to Render.com.
   - [ ] `PORT=10000`
 - [ ] Deploy and verify health check works
 
-### Step 3: Frontend Deployment
-- [ ] Create Static Site on Render
-- [ ] Connect GitHub repository
-- [ ] Configure build command and publish directory
+### Step 3: Frontend Deployment (Vercel)
+- [ ] Sign in to Vercel with GitHub
+- [ ] Import GitHub repository
+- [ ] Configure root directory: `ai-coach-frontend`
 - [ ] Add environment variable:
   - [ ] `VITE_API_URL=[Backend URL]`
 - [ ] Deploy and verify site loads
+- [ ] Custom domain setup (optional)
 
 ## 🔍 Post-Deployment Verification
 
