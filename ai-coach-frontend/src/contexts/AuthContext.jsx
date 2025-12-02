@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       if (token) {
         try {
-          const response = await api.get('/auth/me');
+          const response = await api.get('/api/auth/me');
           setUser(response.data.user);
         } catch (error) {
           console.error('Auth check failed:', error);
@@ -65,7 +65,7 @@ const AuthProvider = ({ children }) => {
 
   const register = async (email, password, name) => {
     try {
-      const response = await api.post('/auth/register', { 
+      const response = await api.post('/api/auth/register', { 
         email, 
         password, 
         name 
@@ -88,7 +88,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.post('/auth/logout');
+      await api.post('/api/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
