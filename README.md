@@ -41,55 +41,6 @@
 
 ```
 crekAI/
-├── ai-coach-backend/          # Node.js/Express API
-│   ├── src/
-│   │   ├── routes/           # API route handlers
-│   │   ├── middleware/       # Auth and validation middleware
-│   │   ├── controllers/      # Business logic
-│   │   └── db/              # Database configuration
-│   ├── prisma/              # Database schema and migrations
-│   ├── render.yaml          # Render deployment config
-│   └── package.json
-├── ai-coach-frontend/        # React application
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/          # Page components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── services/       # API service functions
-│   │   └── utils/          # Utility functions
-│   └── package.json
-└── # AI Coach - Career Development Platform
-
-A comprehensive AI-powered career development platform that helps users with resume building, cover letter generation, interview preparation, and industry insights.
-
-## 🚀 Features
-
-- **Industry Insights Dashboard**: Real-time data for tech roles with salary trends in Indian market (INR)
-- **Interview Preparation**: AI-powered quiz generation with role-specific questions
-- **Cover Letter Generator**: AI-generated personalized cover letters
-- **Resume Builder**: Professional resume creation and optimization
-- **Learning Plans**: Personalized todo lists based on quiz performance
-
-## 🛠 Tech Stack
-
-### Frontend
-- **React 18** with Vite
-- **Tailwind CSS** for styling
-- **Radix UI** components
-- **Recharts** for data visualization
-- **React Router** for navigation
-
-### Backend
-- **Node.js** with Express
-- **Prisma** ORM with PostgreSQL
-- **JWT** authentication
-- **Google Gemini AI** for content generation
-- **Inngest** for background jobs
-
-## 📦 Project Structure
-
-```
-ai-coach/
 ├── ai-coach-frontend/          # React frontend
 │   ├── src/
 │   │   ├── components/         # Reusable UI components
@@ -109,7 +60,7 @@ ai-coach/
 └── render.yaml                # Render deployment config
 ```
 
-## 🚀 Deployment
+## Deployment
 
 This project is configured for deployment on Render.com with the following services:
 
@@ -199,7 +150,7 @@ VITE_API_URL="http://localhost:4001"
 - ATS optimization scoring
 - PDF export functionality
 
-## 🔐 Authentication
+## Authentication
 
 The platform uses JWT-based authentication with the following endpoints:
 - `POST /api/auth/register` - User registration
@@ -207,7 +158,7 @@ The platform uses JWT-based authentication with the following endpoints:
 - `GET /api/auth/me` - Get current user
 - `POST /api/auth/logout` - User logout
 
-## 📱 Responsive Design
+## Responsive Design
 
 The application is fully responsive and works across:
 - Desktop browsers
@@ -215,7 +166,7 @@ The application is fully responsive and works across:
 - Mobile phones
 - Dark/Light mode support
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -223,11 +174,11 @@ The application is fully responsive and works across:
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 🆘 Support
+## Support
 
 For support and questions, please open an issue in the GitHub repository.
 ```
@@ -418,29 +369,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: Check this README and inline code comments
 - **Issues**: Open an issue on GitHub for bugs or feature requests
 - **Discussions**: Use GitHub Discussions for questions and ideas
-
-## Roadmap
-
-### Version 1.0 (Current)
-- Basic resume builder
-- Cover letter generation
-- Interview preparation
-- User authentication
-- Industry insights
-
-### Version 1.1 (Planned)
-- Real-time collaboration
-- Advanced analytics
-- Mobile app
-- Integration with LinkedIn
-- Company reviews
-
-### Version 2.0 (Future)
-- AI career path planning
-- Salary negotiation coach
-- Network analysis
-- Skill gap assessment
-- Mentorship matching
 
 ## Performance
 
