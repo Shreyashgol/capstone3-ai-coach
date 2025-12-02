@@ -2,7 +2,7 @@
 
 **An intelligent career coaching platform that leverages AI technology to provide personalized career guidance, helping users land their dream jobs through optimized resumes, cover letters, and interview preparation.**
 
-## 🌟 Features
+## Features
 
 ### **Core Capabilities**
 - **AI-Powered Resume Builder** - Create ATS-optimized resumes with real-time scoring
@@ -11,7 +11,7 @@
 - **Industry Insights** - Get real-time market data, salary trends, and skill recommendations
 - **Career Dashboard** - Track your progress and get personalized recommendations
 
-### 🔧 **Technical Features**
+### **Technical Features**
 - **Full-Stack Architecture** - React frontend + Node.js/Express backend
 - **Real-time AI Integration** - Google Generative AI (Gemini 1.5 Flash)
 - **Advanced Search & Filtering** - Find and organize your career documents
