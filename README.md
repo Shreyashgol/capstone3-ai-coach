@@ -1,10 +1,10 @@
 # crekAI - AI Career Coach Platform
 
-🚀 **An intelligent career coaching platform that leverages AI technology to provide personalized career guidance, helping users land their dream jobs through optimized resumes, cover letters, and interview preparation.**
+**An intelligent career coaching platform that leverages AI technology to provide personalized career guidance, helping users land their dream jobs through optimized resumes, cover letters, and interview preparation.**
 
 ## 🌟 Features
 
-### 🎯 **Core Capabilities**
+### **Core Capabilities**
 - **AI-Powered Resume Builder** - Create ATS-optimized resumes with real-time scoring
 - **Smart Cover Letter Generation** - Generate personalized cover letters for specific jobs
 - **Interview Preparation** - Practice with AI-generated questions and get instant feedback
@@ -19,7 +19,7 @@
 - **Responsive Design** - Works seamlessly on desktop and mobile
 - **RESTful API** - Clean, documented API endpoints
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend Stack
 - **Runtime**: Node.js with ES Modules
@@ -37,7 +37,7 @@
 - **HTTP Client**: Axios
 - **Authentication**: Clerk React SDK
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 crekAI/
@@ -61,7 +61,7 @@ crekAI/
 └── README.md
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+ installed
@@ -126,7 +126,7 @@ npm run dev
 
 Frontend will be running on `http://localhost:5173`
 
-## 🌐 Deployment
+## Deployment
 
 ### Backend (Render)
 The backend is pre-configured for Render deployment:
@@ -150,7 +150,7 @@ Deploy the frontend to your preferred static hosting:
 3. **Configure build command**: `npm run build`
 4. **Set environment variables**
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
 ```
@@ -189,7 +189,7 @@ GET    /api/dashboard/stats            - Get user statistics
 GET    /api/dashboard/insights/:industry - Get industry insights
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Backend Tests
 ```bash
@@ -212,7 +212,7 @@ npm test
 npm run test:e2e
 ```
 
-## 📊 Database Schema
+## Database Schema
 
 The application uses PostgreSQL with the following main entities:
 
@@ -224,7 +224,7 @@ The application uses PostgreSQL with the following main entities:
 
 See `ai-coach-backend/prisma/schema.prisma` for complete schema.
 
-## 🤝 Contributing
+## Contributing
 
 1. **Fork the repository**
 2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
@@ -238,47 +238,47 @@ See `ai-coach-backend/prisma/schema.prisma` for complete schema.
 - Update documentation as needed
 - Ensure all tests pass before PR
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙋‍♂️ Support
+## Support
 
 - **Documentation**: Check this README and inline code comments
 - **Issues**: Open an issue on GitHub for bugs or feature requests
 - **Discussions**: Use GitHub Discussions for questions and ideas
 
-## 🗺️ Roadmap
+## Roadmap
 
 ### Version 1.0 (Current)
-- ✅ Basic resume builder
-- ✅ Cover letter generation
-- ✅ Interview preparation
-- ✅ User authentication
-- ✅ Industry insights
+- Basic resume builder
+- Cover letter generation
+- Interview preparation
+- User authentication
+- Industry insights
 
 ### Version 1.1 (Planned)
-- 🔄 Real-time collaboration
-- 🔄 Advanced analytics
-- 🔄 Mobile app
-- 🔄 Integration with LinkedIn
-- 🔄 Company reviews
+- Real-time collaboration
+- Advanced analytics
+- Mobile app
+- Integration with LinkedIn
+- Company reviews
 
 ### Version 2.0 (Future)
-- 📋 AI career path planning
-- 📋 Salary negotiation coach
-- 📋 Network analysis
-- 📋 Skill gap assessment
-- 📋 Mentorship matching
+- AI career path planning
+- Salary negotiation coach
+- Network analysis
+- Skill gap assessment
+- Mentorship matching
 
-## 📈 Performance
+## Performance
 
 - **API Response Time**: <200ms (95th percentile)
 - **Page Load Time**: <3 seconds
 - **Uptime**: 99.9% (with proper hosting)
 - **Database**: Optimized queries with proper indexing
 
-## 🔒 Security
+## Security
 
 - JWT-based authentication with refresh tokens
 - Input validation and sanitization
