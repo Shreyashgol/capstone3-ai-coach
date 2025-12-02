@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/accordion";
 import HeroSection from "@/components/Hero";
 import AuthDebug from "@/components/AuthDebug";
+import IndustryInsightsPreview from "@/components/IndustryInsightsPreview";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function App() {
@@ -78,8 +79,15 @@ export default function App() {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* Industry Insights Preview */}
       <section className="w-full py-12 md:py-24 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <IndustryInsightsPreview />
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="w-full py-12 md:py-24 bg-muted/50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl font-bold mb-4">How It Works</h2>
@@ -106,7 +114,7 @@ export default function App() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="w-full py-12 md:py-24 bg-muted/50">
+      <section className="w-full py-12 md:py-24 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl font-bold text-center mb-12">
             What Our Users Say
@@ -199,7 +207,7 @@ export default function App() {
                 variant="secondary"
                 className="h-11 mt-5 animate-bounce cursor-pointer"
               >
-                {isAuthenticated ? "Go to Dashboard" : "Start Your Journey Today"}
+                {isAuthenticated ? "View Industry Insights" : "Start Your Journey Today"}
               </Button>
             </Link>
           </div>

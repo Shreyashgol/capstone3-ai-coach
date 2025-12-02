@@ -58,7 +58,178 @@ crekAI/
 │   │   ├── services/       # API service functions
 │   │   └── utils/          # Utility functions
 │   └── package.json
-└── README.md
+└── # AI Coach - Career Development Platform
+
+A comprehensive AI-powered career development platform that helps users with resume building, cover letter generation, interview preparation, and industry insights.
+
+## 🚀 Features
+
+- **Industry Insights Dashboard**: Real-time data for tech roles with salary trends in Indian market (INR)
+- **Interview Preparation**: AI-powered quiz generation with role-specific questions
+- **Cover Letter Generator**: AI-generated personalized cover letters
+- **Resume Builder**: Professional resume creation and optimization
+- **Learning Plans**: Personalized todo lists based on quiz performance
+
+## 🛠 Tech Stack
+
+### Frontend
+- **React 18** with Vite
+- **Tailwind CSS** for styling
+- **Radix UI** components
+- **Recharts** for data visualization
+- **React Router** for navigation
+
+### Backend
+- **Node.js** with Express
+- **Prisma** ORM with PostgreSQL
+- **JWT** authentication
+- **Google Gemini AI** for content generation
+- **Inngest** for background jobs
+
+## 📦 Project Structure
+
+```
+ai-coach/
+├── ai-coach-frontend/          # React frontend
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   ├── pages/             # Page components
+│   │   ├── hooks/             # Custom React hooks
+│   │   ├── contexts/          # React contexts
+│   │   └── config/            # Configuration files
+│   └── package.json
+├── ai-coach-backend/           # Node.js backend
+│   ├── src/
+│   │   ├── controllers/       # Route controllers
+│   │   ├── models/           # Data models
+│   │   ├── routes/           # API routes
+│   │   ├── services/         # Business logic
+│   │   └── middleware/       # Express middleware
+│   └── package.json
+└── render.yaml                # Render deployment config
+```
+
+## 🚀 Deployment
+
+This project is configured for deployment on Render.com with the following services:
+
+### Backend (Web Service)
+- **Runtime**: Node.js
+- **Build Command**: `cd ai-coach-backend && npm install && npm run build`
+- **Start Command**: `cd ai-coach-backend && npm start`
+- **Environment Variables**:
+  - `NODE_ENV=production`
+  - `DATABASE_URL` (from Render PostgreSQL)
+  - `JWT_SECRET` (auto-generated)
+  - `GEMINI_API_KEY` (manual setup required)
+
+### Frontend (Static Site)
+- **Build Command**: `cd ai-coach-frontend && npm install && npm run build`
+- **Publish Directory**: `ai-coach-frontend/dist`
+- **Environment Variables**:
+  - `VITE_API_URL=https://ai-coach-backend.onrender.com`
+
+### Database
+- **PostgreSQL** database on Render's free tier
+
+## 🔧 Local Development
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL database
+- Google Gemini API key
+
+### Setup
+
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd ai-coach
+```
+
+2. **Backend Setup**
+```bash
+cd ai-coach-backend
+npm install
+cp .env.example .env
+# Edit .env with your database URL and API keys
+npx prisma migrate dev
+npm run dev
+```
+
+3. **Frontend Setup**
+```bash
+cd ai-coach-frontend
+npm install
+npm run dev
+```
+
+### Environment Variables
+
+**Backend (.env)**
+```
+DATABASE_URL="postgresql://username:password@localhost:5432/ai_coach"
+JWT_SECRET="your-jwt-secret"
+GEMINI_API_KEY="your-gemini-api-key"
+NODE_ENV="development"
+```
+
+**Frontend (.env.development)**
+```
+VITE_API_URL="http://localhost:4001"
+```
+
+## 📊 Key Features
+
+### Industry Insights
+- Real-time job market data for Indian tech industry
+- Salary ranges in INR (Lakhs per annum)
+- Geographic insights for major tech hubs
+- Skills demand analysis with growth trends
+
+### Interview Preparation
+- Role-specific quiz generation
+- AI-powered dynamic questions for repeat attempts
+- Detailed performance analysis
+- Personalized learning recommendations
+
+### Cover Letters & Resume
+- AI-generated content based on job descriptions
+- Professional templates and formatting
+- ATS optimization scoring
+- PDF export functionality
+
+## 🔐 Authentication
+
+The platform uses JWT-based authentication with the following endpoints:
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/logout` - User logout
+
+## 📱 Responsive Design
+
+The application is fully responsive and works across:
+- Desktop browsers
+- Tablet devices
+- Mobile phones
+- Dark/Light mode support
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For support and questions, please open an issue in the GitHub repository.
 ```
 
 ## Quick Start

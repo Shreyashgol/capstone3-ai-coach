@@ -52,17 +52,17 @@ export default function Header() {
         <div className="flex items-center space-x-2 md:space-x-4">
           {isAuthenticated && (
             <>
-              {/* Dashboard */}
+              {/* Industry Insights Dashboard */}
               <Link to="/dashboard">
                 <Button
                   variant="outline"
                   className="hidden md:inline-flex items-center gap-2 cursor-pointer"
                 >
-                  <LayoutDashboard className="h-4 w-4" />
+                  <StarsIcon className="h-4 w-4" />
                   Industry Insights
                 </Button>
                 <Button variant="ghost" className="md:hidden w-10 h-10 p-0 cursor-pointer">
-                  <LayoutDashboard className="h-4 w-4" />
+                  <StarsIcon className="h-4 w-4" />
                 </Button>
               </Link>
 

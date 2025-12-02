@@ -16,7 +16,17 @@ import jwtAuthRouter from "./routes/jwtAuth.js";
 
 const app = express();
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://ai-coach-frontend.onrender.com', 'https://ai-coach.onrender.com']
+    : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "1mb" }));
 app.use(authMiddleware);
 
@@ -64,7 +74,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 app.listen(port, () => {
   console.log(`🚀 AI Coach Backend running on http://localhost:${port}`);
   console.log(`📚 API Documentation:`);

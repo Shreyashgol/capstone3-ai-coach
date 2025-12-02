@@ -6,7 +6,7 @@ import App from './pages/App.jsx'
 import CoverLetters from './pages/CoverLetters.jsx'
 import Interview from './pages/Interview.jsx'
 import Onboarding from './pages/Onboarding.jsx'
-import Dashboard from './pages/Dashboard.jsx'
+import EnhancedDashboard from './pages/EnhancedDashboard.jsx'
 import Resume from './pages/Resume.jsx'
 import CoverLetterDetail from './pages/CoverLetterDetail.jsx'
 import SignInPage from './pages/auth/SignIn.jsx'
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         path: '/dashboard', 
         element: (
           <ProtectedRoute>
-            <Dashboard />
+            <EnhancedDashboard />
           </ProtectedRoute>
         ) 
       },

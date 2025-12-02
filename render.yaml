@@ -1,0 +1,36 @@
+services:
+  # Backend API Service
+  - type: web
+    name: ai-coach-backend
+    runtime: node
+    plan: free
+    buildCommand: cd ai-coach-backend && npm install && npm run build
+    startCommand: cd ai-coach-backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-coach-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+    healthCheckPath: /health
+
+  # Frontend Static Site
+  - type: static
+    name: ai-coach-frontend
+    buildCommand: cd ai-coach-frontend && npm install && npm run build
+    staticPublishPath: ai-coach-frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://ai-coach-backend.onrender.com
+
+# Database
+databases:
+  - name: ai-coach-db
+    databaseName: ai_coach
+    user: ai_coach_user
+    plan: free
