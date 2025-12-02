@@ -22,7 +22,8 @@ export default function CoverLetters() {
     console.log('Cover letters page loaded, headers:', headers)
     const run = async () => {
       try {
-        const res = await fetch('/api/cover-letters', { headers })
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        const res = await fetch(`${baseURL}/api/cover-letters`, { headers })
         const data = await res.json()
         console.log('Cover letters data:', data)
         const list = Array.isArray(data)
@@ -61,7 +62,8 @@ export default function CoverLetters() {
       console.log('Generating cover letter with data:', form)
       console.log('Using headers:', headers)
       
-      const res = await fetch('/api/cover-letters/generate', {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/cover-letters/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify(form)

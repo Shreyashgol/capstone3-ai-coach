@@ -20,7 +20,8 @@ export default function Resume() {
     console.log('Resume page loaded, headers:', headers)
     const run = async () => {
       try {
-        const res = await fetch('/api/resume', { headers })
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        const res = await fetch(`${baseURL}/api/resume`, { headers })
         const data = await res.json()
         console.log('Resume data loaded:', data)
         setContent(data?.content || '')
@@ -54,7 +55,8 @@ export default function Resume() {
     
     setSaving(true)
     try {
-      const res = await fetch('/api/resume/save', {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/resume/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ content })
@@ -93,7 +95,8 @@ export default function Resume() {
     
     try {
       console.log('Making improve request with headers:', headers)
-      const res = await fetch('/api/resume/improve', {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/resume/improve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ current: selection, type: 'experience' })
@@ -139,7 +142,8 @@ export default function Resume() {
     
     try {
       console.log('Making ATS request with headers:', headers)
-      const res = await fetch('/api/resume/ats-score', { headers })
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/resume/ats-score`, { headers })
       
       console.log('ATS response status:', res.status)
       
@@ -171,7 +175,8 @@ export default function Resume() {
     showMessage('Generating PDF...', 'info')
     
     try {
-      const res = await fetch('/api/resume/pdf', { headers })
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/resume/pdf`, { headers })
       
       if (res.ok) {
         const blob = await res.blob()

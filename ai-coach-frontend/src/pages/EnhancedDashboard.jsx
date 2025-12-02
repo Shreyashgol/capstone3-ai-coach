@@ -79,9 +79,10 @@ export default function EnhancedDashboard() {
 
   const fetchDashboardData = async () => {
     try {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
       const [jobCategoriesRes, marketInsightsRes] = await Promise.all([
-        fetch('/api/dashboard/job-categories', { headers }),
-        fetch('/api/dashboard/market-insights', { headers })
+        fetch(`${baseURL}/api/dashboard/job-categories`, { headers }),
+        fetch(`${baseURL}/api/dashboard/market-insights`, { headers })
       ])
       
       const jobCategoriesData = await jobCategoriesRes.json()
@@ -98,9 +99,10 @@ export default function EnhancedDashboard() {
 
   const fetchCategorySpecificData = async (category) => {
     try {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
       const [salaryRes, skillsRes] = await Promise.all([
-        fetch(`/api/dashboard/salary-trends?category=${encodeURIComponent(category)}`, { headers }),
-        fetch(`/api/dashboard/skill-analytics?category=${encodeURIComponent(category)}`, { headers })
+        fetch(`${baseURL}/api/dashboard/salary-trends?category=${encodeURIComponent(category)}`, { headers }),
+        fetch(`${baseURL}/api/dashboard/skill-analytics?category=${encodeURIComponent(category)}`, { headers })
       ])
       
       const salaryData = await salaryRes.json()

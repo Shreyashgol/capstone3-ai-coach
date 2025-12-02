@@ -92,7 +92,8 @@ export default function Interview() {
 
   const fetchAssessments = async () => {
     try {
-      const res = await fetch('/api/interview/assessments', { headers })
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/interview/assessments`, { headers })
       const data = await res.json()
       setAssessments(data.assessments || [])
     } catch (error) {
@@ -102,7 +103,8 @@ export default function Interview() {
 
   const fetchTodos = async () => {
     try {
-      const res = await fetch('/api/interview/todos', { headers })
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/interview/todos`, { headers })
       const data = await res.json()
       setTodos(data.todos || [])
     } catch (error) {
@@ -112,7 +114,8 @@ export default function Interview() {
 
   const fetchQuizHistory = async () => {
     try {
-      const res = await fetch('/api/interview/quiz-history', { headers })
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/interview/quiz-history`, { headers })
       const data = await res.json()
       setQuizHistory(data.history || {})
     } catch (error) {
@@ -138,7 +141,8 @@ export default function Interview() {
     setIsAIGenerated(willUseAI)
     
     try {
-      const res = await fetch('/api/interview/generate-quiz', {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/interview/generate-quiz`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ role: selectedRole })
@@ -159,7 +163,8 @@ export default function Interview() {
     
     setSubmitting(true)
     try {
-      const res = await fetch('/api/interview/save-result', {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/interview/save-result`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ 
@@ -182,7 +187,8 @@ export default function Interview() {
 
   const markTodoComplete = async (todoId) => {
     try {
-      await fetch(`/api/interview/todos/${todoId}/complete`, {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      await fetch(`${baseURL}/api/interview/todos/${todoId}/complete`, {
         method: 'PATCH',
         headers
       })
@@ -195,7 +201,8 @@ export default function Interview() {
   const deleteTodo = async (todoId, todoTitle) => {
     if (window.confirm(`Are you sure you want to delete "${todoTitle}"?`)) {
       try {
-        await fetch(`/api/interview/todos/${todoId}`, {
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        await fetch(`${baseURL}/api/interview/todos/${todoId}`, {
           method: 'DELETE',
           headers
         })
@@ -209,7 +216,8 @@ export default function Interview() {
   const deleteAssessment = async (assessmentId, assessmentCategory) => {
     if (window.confirm(`Are you sure you want to delete the ${assessmentCategory} assessment?`)) {
       try {
-        await fetch(`/api/interview/assessments/${assessmentId}`, {
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        await fetch(`${baseURL}/api/interview/assessments/${assessmentId}`, {
           method: 'DELETE',
           headers
         })

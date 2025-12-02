@@ -13,7 +13,8 @@ export default function Onboarding() {
   useEffect(() => {
     const run = async () => {
       try {
-        const res = await fetch('/api/user/onboarding-status', { headers })
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        const res = await fetch(`${baseURL}/api/user/onboarding-status`, { headers })
         const data = await res.json()
         if (data?.isOnboarded) nav('/dashboard')
       } finally {
@@ -31,7 +32,8 @@ export default function Onboarding() {
       bio: form.bio,
       skills: form.skills.split(',').map((s) => s.trim()).filter(Boolean)
     }
-    const res = await fetch('/api/user/update', {
+    const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+    const res = await fetch(`${baseURL}/api/user/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers },
       body: JSON.stringify(payload)
