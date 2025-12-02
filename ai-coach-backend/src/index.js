@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import { authMiddleware } from "./middleware/auth.js";
+import { serve } from "inngest/express";
+import { inngest, updateIndustryInsights, triggerIndustryUpdate, sendIndustryInsights } from "./services/InngestService.js";
+import { db } from "./db/prisma.js";
 
 // Import MVC routes
 import coverLetterRouter from "./routes/coverLetter.js";
@@ -18,8 +21,15 @@ app.use(express.json({ limit: "1mb" }));
 app.use(authMiddleware);
 
 // Health check
-app.get("/health", (req, res) => {
-  res.json({ ok: true });
+app.get("/health", async (req, res) => {
+  try {
+    // Test database connection
+    await db.$queryRaw`SELECT 1`;
+    res.json({ ok: true, database: 'connected' });
+  } catch (error) {
+    console.error('Database connection error:', error);
+    res.status(500).json({ ok: false, database: 'disconnected', error: error.message });
+  }
 });
 
 // API Routes - Updated to match frontend expectations
@@ -29,6 +39,16 @@ app.use("/api/interview", interviewRouter);
 app.use("/api/user", userRouter);
 app.use("/api/resume", resumeRouter);
 app.use("/api/dashboard", dashboardRouter);
+
+// Inngest endpoint for background jobs
+app.use("/api/inngest", serve({
+  client: inngest,
+  functions: [
+    updateIndustryInsights,
+    triggerIndustryUpdate,
+    sendIndustryInsights
+  ]
+}));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

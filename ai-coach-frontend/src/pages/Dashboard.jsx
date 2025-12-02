@@ -32,6 +32,25 @@ export default function Dashboard() {
         setInsights({ ...stats, ...insights })
       } catch (error) {
         console.error('Failed to fetch insights:', error)
+        // Set fallback data
+        setInsights({
+          demandLevel: 'High',
+          growthRate: 15,
+          marketOutlook: 'Positive',
+          salaryRanges: [
+            { role: 'Junior Developer', median: 70000 },
+            { role: 'Senior Developer', median: 100000 },
+            { role: 'Lead Developer', median: 140000 }
+          ],
+          topSkills: ['JavaScript', 'Python', 'React', 'Node.js', 'AWS', 'Docker'],
+          keyTrends: [
+            'Remote work becoming standard',
+            'AI integration in development',
+            'Cloud-first architecture',
+            'DevOps practices adoption'
+          ],
+          recommendedSkills: ['Machine Learning', 'Kubernetes', 'GraphQL', 'TypeScript']
+        })
       } finally {
         setLoading(false)
       }
