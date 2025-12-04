@@ -9,6 +9,11 @@ router.post("/generate", CoverLetterController.generateCoverLetter);
 // Get all cover letters for user
 router.get("/", CoverLetterController.getCoverLetters);
 
+// Test endpoint
+router.get("/test", (req, res) => {
+  res.json({ message: "Cover letter routes working", timestamp: new Date().toISOString() });
+});
+
 // Get specific cover letter by ID
 router.get('/:id', CoverLetterController.getCoverLetter);
 
