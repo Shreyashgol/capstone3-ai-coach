@@ -33,7 +33,8 @@ export default function CoverLetterDetail() {
     const fetchCoverLetter = async () => {
       try {
         console.log('=== FETCHING COVER LETTER ===')
-        const res = await fetch(`/api/cover-letters/${id}`, { headers })
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        const res = await fetch(`${baseURL}/api/cover-letters/${id}`, { headers })
         console.log('Fetch response status:', res.status)
         
         if (res.ok) {
@@ -104,7 +105,8 @@ export default function CoverLetterDetail() {
       console.log('Request body:', { content })
       console.log('Headers:', headers)
       
-      const res = await fetch(`/api/cover-letters/${id}`, {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/cover-letters/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ content: content.trim() })
@@ -152,7 +154,8 @@ export default function CoverLetterDetail() {
     try {
       console.log('Deleting cover letter ID:', id)
       
-      const res = await fetch(`/api/cover-letters/${id}`, {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+      const res = await fetch(`${baseURL}/api/cover-letters/${id}`, {
         method: 'DELETE',
         headers
       })

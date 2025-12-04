@@ -99,7 +99,8 @@ export default function CoverLetters() {
     if (window.confirm(`Are you sure you want to delete the cover letter for "${jobTitle}" at "${companyName}"?`)) {
       setDeletingItems(prev => [...prev, id])
       try {
-        const res = await fetch(`/api/cover-letters/${id}`, {
+        const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
+        const res = await fetch(`${baseURL}/api/cover-letters/${id}`, {
           method: 'DELETE',
           headers
         })
@@ -131,8 +132,9 @@ export default function CoverLetters() {
     showMessage(`Deleting ${selectedItems.length} cover letter${selectedItems.length > 1 ? 's' : ''}...`, 'info')
     
     try {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4001'
       const deletePromises = selectedItems.map(id => 
-        fetch(`/api/cover-letters/${id}`, {
+        fetch(`${baseURL}/api/cover-letters/${id}`, {
           method: 'DELETE',
           headers
         })
