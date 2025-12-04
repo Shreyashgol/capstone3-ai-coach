@@ -12,7 +12,6 @@ class AuthController {
     try {
       const { email, password, name } = req.body;
 
-      // Validation
       if (!email || !password || !name) {
         return res.status(400).json({ 
           error: 'Email, password, and name are required' 
@@ -25,7 +24,6 @@ class AuthController {
         });
       }
 
-      // Check if user already exists
       const existingUser = await UserModel.findByEmail(email);
       if (existingUser) {
         return res.status(409).json({ 
@@ -33,10 +31,8 @@ class AuthController {
         });
       }
 
-      // Hash password
       const passwordHash = await bcrypt.hash(password, 10);
 
-      // Create user
       const user = await UserModel.create({
         email,
         passwordHash,
@@ -44,10 +40,8 @@ class AuthController {
         clerkUserId: '' // Will be set to user.id in model
       });
 
-      // Generate token
       const token = AuthController.generateToken(user.id);
 
-      // Return user data without sensitive info
       const userResponse = {
         id: user.id,
         email: user.email,
@@ -72,14 +66,12 @@ class AuthController {
     try {
       const { email, password } = req.body;
 
-      // Validation
       if (!email || !password) {
         return res.status(400).json({ 
           error: 'Email and password are required' 
         });
       }
 
-      // Find user
       const user = await UserModel.findByEmail(email);
       if (!user || !user.passwordHash) {
         return res.status(401).json({ 
@@ -87,7 +79,6 @@ class AuthController {
         });
       }
 
-      // Verify password
       const isValidPassword = await bcrypt.compare(password, user.passwordHash);
       if (!isValidPassword) {
         return res.status(401).json({ 
@@ -95,10 +86,8 @@ class AuthController {
         });
       }
 
-      // Generate token
       const token = AuthController.generateToken(user.id);
 
-      // Return user data without sensitive info
       const userResponse = {
         id: user.id,
         email: user.email,
@@ -149,8 +138,6 @@ class AuthController {
 
   static async logout(req, res) {
     try {
-      // In a real implementation, you might want to blacklist the token
-      // For now, we'll just return success
       res.json({ 
         message: 'Logout successful' 
       });

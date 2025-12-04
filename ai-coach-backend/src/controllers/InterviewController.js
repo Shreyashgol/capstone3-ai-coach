@@ -1,9 +1,8 @@
 import { UserModel, AssessmentModel } from '../models/index.js';
 import AIService from '../services/AIService.js';
 
-// In-memory storage for todos and question history (in production, use a database)
 let todosStorage = [];
-let questionHistory = {}; // Track questions asked per user per role
+let questionHistory = {};
 
 class InterviewController {
   constructor() {
@@ -34,22 +33,18 @@ class InterviewController {
         return res.status(400).json({ error: 'Role is required' });
       }
 
-      // Check if user has taken this role quiz before
       const userRoleKey = `${userId}_${role}`;
       const previousQuestions = questionHistory[userRoleKey] || [];
       
       let questions;
       
       if (previousQuestions.length === 0) {
-        // First time taking this role quiz - use predefined questions
         questions = InterviewController.generateRoleBasedQuestions(role);
       } else {
-        // User has taken this quiz before - generate new AI questions
         console.log(`Generating AI questions for ${role} (attempt ${previousQuestions.length + 1})`);
         questions = await InterviewController.generateAIQuestions(role, previousQuestions);
       }
 
-      // Store questions in history
       if (!questionHistory[userRoleKey]) {
         questionHistory[userRoleKey] = [];
       }
@@ -419,7 +414,6 @@ class InterviewController {
       const result = await aiService.model.generateContent(prompt);
       const responseText = result.response.text().trim();
       
-      // Clean up the response to extract JSON
       let jsonText = responseText;
       if (jsonText.includes('```json')) {
         jsonText = jsonText.split('```json')[1].split('```')[0].trim();
@@ -429,8 +423,7 @@ class InterviewController {
       
       try {
         const aiQuestions = JSON.parse(jsonText);
-        
-        // Validate and ensure we have the right structure
+
         if (Array.isArray(aiQuestions) && aiQuestions.length > 0) {
           return aiQuestions.map(q => ({
             question: q.question || 'Generated question',
@@ -447,13 +440,11 @@ class InterviewController {
         console.log('Raw AI response:', responseText);
       }
       
-      // Fallback to predefined questions if AI generation fails
       console.log('AI generation failed, falling back to predefined questions');
       return InterviewController.generateRoleBasedQuestions(role);
       
     } catch (error) {
       console.error('AI Question Generation Error:', error);
-      // Fallback to predefined questions
       return InterviewController.generateRoleBasedQuestions(role);
     }
   }
@@ -489,13 +480,10 @@ class InterviewController {
       const wrongAnswers = questionResults.filter((q) => !q.isCorrect);
       const correctAnswers = questionResults.filter((q) => q.isCorrect);
       
-      // Generate AI feedback
       const feedback = InterviewController.generateAIFeedback(role, questionResults, score, questions.length);
       
-      // Create learning todos based on wrong answers
       const todos = InterviewController.createLearningTodos(userId, role, wrongAnswers);
       
-      // Save todos to storage
       todosStorage.push(...todos);
 
       const assessment = await AssessmentModel.create({
@@ -526,7 +514,6 @@ class InterviewController {
     let strengths = [];
     let improvements = [];
 
-    // Overall performance feedback
     if (percentage >= 80) {
       overall = `Excellent performance! You scored ${score}/${totalQuestions} (${Math.round(percentage)}%) on this ${role} assessment. You demonstrate strong technical knowledge and are well-prepared for interviews in this role.`;
     } else if (percentage >= 60) {
@@ -535,7 +522,6 @@ class InterviewController {
       overall = `You scored ${score}/${totalQuestions} (${Math.round(percentage)}%) on this ${role} assessment. This indicates there are several key concepts that would benefit from additional study and practice.`;
     }
 
-    // Identify strengths based on correct answers
     const strengthAreas = {};
     correctAnswers.forEach(q => {
       strengthAreas[q.type] = (strengthAreas[q.type] || 0) + 1;
@@ -551,7 +537,6 @@ class InterviewController {
       strengths.push('Shows good problem-solving approach');
     }
 
-    // Identify improvement areas based on wrong answers
     const improvementAreas = {};
     wrongAnswers.forEach(q => {
       improvementAreas[q.type] = (improvementAreas[q.type] || 0) + 1;
@@ -561,7 +546,6 @@ class InterviewController {
       improvements.push(`Review ${type} fundamentals and practice more problems`);
     });
 
-    // Add role-specific recommendations
     const roleRecommendations = {
       'software-engineer': ['Practice coding problems on LeetCode or HackerRank', 'Review system design patterns'],
       'data-scientist': ['Practice with real datasets on Kaggle', 'Review statistical concepts and ML algorithms'],
@@ -603,7 +587,6 @@ class InterviewController {
       todos.push(todo);
     });
 
-    // Add general improvement todos based on role
     const generalTodos = {
       'software-engineer': [
         { title: 'Practice Data Structures & Algorithms', description: 'Solve 5 problems on LeetCode focusing on trees and graphs', category: 'Algorithms', priority: 'High' },
@@ -693,7 +676,6 @@ class InterviewController {
         return res.status(404).json({ error: 'Todo not found' });
       }
 
-      // Remove the todo from storage
       const deletedTodo = todosStorage.splice(todoIndex, 1)[0];
 
       res.json({ 
@@ -716,7 +698,6 @@ class InterviewController {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      // Get user's quiz history
       const userHistory = {};
       Object.keys(questionHistory).forEach(key => {
         if (key.startsWith(userId + '_')) {
@@ -807,7 +788,6 @@ class InterviewController {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Check if assessment exists and belongs to user
       const existingAssessment = await AssessmentModel.findById(id);
 
       if (!existingAssessment || existingAssessment.userId !== user.id) {
