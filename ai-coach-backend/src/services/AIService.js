@@ -262,6 +262,111 @@ class AIService {
       };
     }
   }
+
+  async improveResumeContent(content, type, industry = 'general') {
+    try {
+      const prompt = `
+        You are a professional resume writer and career coach.
+        Improve the following section of a resume for a candidate in the "${industry}" industry.
+
+        Section type: ${type}
+        Industry: ${industry}
+
+        Original section:
+        """
+        ${content}
+        """
+
+        Instructions:
+        - Make the text more impactful and professional
+        - Use action verbs and quantifiable achievements where possible
+        - Optimize for ATS (Applicant Tracking System) compatibility
+        - Keep the same general structure and meaning
+        - Return ONLY the improved text, no explanations
+
+        Improved section:
+      `;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      return {
+        improved: text.trim(),
+        success: true
+      };
+    } catch (error) {
+      console.error('Resume Improvement AI Service Error:', error);
+      
+      return {
+        improved: content, // Return original if AI fails
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async analyzeResumeATS(content) {
+    try {
+      const prompt = `
+        You are an expert ATS (Applicant Tracking System) analyzer and resume reviewer.
+        
+        Analyze this resume for ATS compatibility and provide a comprehensive assessment.
+        
+        Resume content:
+        """
+        ${content}
+        """
+        
+        Provide a detailed analysis with:
+        1. ATS score (0-100) based on formatting, keywords, structure
+        2. Specific feedback on what works well and what needs improvement
+        3. List of strengths (3-5 items)
+        4. List of specific improvements needed (3-5 items)
+        
+        Return ONLY a valid JSON object in this exact format:
+        {
+          "atsScore": 85,
+          "feedback": "Your resume shows strong technical skills and clear formatting. The experience section is well-structured with quantifiable achievements. However, consider adding more industry-specific keywords and improving the skills section organization.",
+          "strengths": ["Clear formatting and structure", "Quantifiable achievements", "Relevant technical skills", "Professional summary"],
+          "improvements": ["Add more industry keywords", "Improve skills section", "Include more metrics", "Optimize section headers"]
+        }
+      `;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      // Try to extract JSON from the response
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      
+      if (jsonMatch) {
+        const analysis = JSON.parse(jsonMatch[0]);
+        
+        // Validate and sanitize
+        analysis.atsScore = Math.max(0, Math.min(100, parseInt(analysis.atsScore) || 75));
+        
+        return {
+          ...analysis,
+          success: true
+        };
+      } else {
+        throw new Error('Could not extract JSON from AI response');
+      }
+    } catch (error) {
+      console.error('ATS Analysis AI Service Error:', error);
+      
+      // Return fallback analysis
+      return {
+        atsScore: 70,
+        feedback: "Resume analysis completed. Consider optimizing for ATS compatibility by adding more keywords and improving formatting.",
+        strengths: ["Professional appearance", "Clear structure"],
+        improvements: ["Add industry-specific keywords", "Improve formatting", "Include more metrics"],
+        success: false,
+        error: error.message
+      };
+    }
+  }
 }
 
 export default AIService;
