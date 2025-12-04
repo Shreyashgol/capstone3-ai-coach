@@ -75,7 +75,10 @@ class CoverLetterController {
       const { id } = req.params;
       const userId = CoverLetterController.getUserId(req);
       
+      console.log(`Getting cover letter ${id} for user ${userId}`);
+      
       if (!userId) {
+        console.log('No userId found in request');
         return res.status(401).json({ 
           error: 'Unauthorized' 
         });
@@ -84,23 +87,33 @@ class CoverLetterController {
       const coverLetter = await CoverLetterModel.findById(id);
       
       if (!coverLetter) {
+        console.log(`Cover letter ${id} not found`);
         return res.status(404).json({ 
           error: 'Cover letter not found' 
         });
       }
 
       // Check if user owns this cover letter
-      if (coverLetter.userId !== userId) {
+      const user = req.userId
+        ? await UserModel.findById(req.userId)
+        : await UserModel.findByClerkUserId(userId);
+      
+      console.log(`Cover letter userId: ${coverLetter.userId}, User ID: ${user?.id}`);
+      
+      if (!user || coverLetter.userId !== user.id) {
+        console.log('Access denied - user does not own this cover letter');
         return res.status(403).json({ 
           error: 'Access denied' 
         });
       }
 
+      console.log('Cover letter found and authorized, returning data');
       res.json({ coverLetter });
     } catch (error) {
       console.error('Get cover letter error:', error);
       res.status(500).json({ 
-        error: 'Failed to get cover letter' 
+        error: 'Failed to get cover letter',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   }
