@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useApiHeaders } from '@/hooks/useApiHeaders'
-import { Trash2, MoreVertical } from 'lucide-react'
+import { Trash2, MoreVertical, Search, Filter, SortAsc, SortDesc, X } from 'lucide-react'
 
 export default function CoverLetters() {
   const [items, setItems] = useState([])
@@ -16,6 +16,14 @@ export default function CoverLetters() {
   const [selectedItems, setSelectedItems] = useState([])
   const [bulkDeleting, setBulkDeleting] = useState(false)
   const [deletingItems, setDeletingItems] = useState([])
+  
+  // Search and Filter States
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all') // 'all', 'completed', 'draft'
+  const [sortBy, setSortBy] = useState('date') // 'date', 'company', 'title'
+  const [sortOrder, setSortOrder] = useState('desc') // 'asc', 'desc'
+  const [showFilters, setShowFilters] = useState(false)
+  
   const { headers } = useApiHeaders()
 
   useEffect(() => {
@@ -47,6 +55,62 @@ export default function CoverLetters() {
       setMessageType('')
     }, 4000)
   }
+
+  // Filter and sort cover letters
+  const filteredAndSortedItems = useMemo(() => {
+    let filtered = items.filter(item => {
+      // Search filter
+      const searchMatch = searchTerm === '' || 
+        item.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.content?.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      // Status filter
+      const statusMatch = statusFilter === 'all' || item.status === statusFilter
+      
+      return searchMatch && statusMatch
+    })
+
+    // Sort items
+    filtered.sort((a, b) => {
+      let comparison = 0
+      
+      switch (sortBy) {
+        case 'date':
+          comparison = new Date(a.createdAt) - new Date(b.createdAt)
+          break
+        case 'company':
+          comparison = (a.companyName || '').localeCompare(b.companyName || '')
+          break
+        case 'title':
+          comparison = (a.jobTitle || '').localeCompare(b.jobTitle || '')
+          break
+        default:
+          comparison = 0
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison
+    })
+
+    return filtered
+  }, [items, searchTerm, statusFilter, sortBy, sortOrder])
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchTerm('')
+    setStatusFilter('all')
+    setSortBy('date')
+    setSortOrder('desc')
+  }
+
+  // Get filter counts
+  const filterCounts = useMemo(() => {
+    return {
+      all: items.length,
+      completed: items.filter(item => item.status === 'completed').length,
+      draft: items.filter(item => item.status === 'draft').length
+    }
+  }, [items])
 
   const generate = async (e) => {
     e.preventDefault()
@@ -172,7 +236,7 @@ export default function CoverLetters() {
 
   const toggleSelectAll = () => {
     setSelectedItems(prev => 
-      prev.length === items.length ? [] : items.map(item => item.id)
+      prev.length === filteredAndSortedItems.length ? [] : filteredAndSortedItems.map(item => item.id)
     )
   }
 
@@ -189,7 +253,12 @@ export default function CoverLetters() {
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold gradient-title">Cover Letters</h1>
         <div className="text-sm text-muted-foreground">
-          {items.length} cover letter{items.length !== 1 ? 's' : ''}
+          {filteredAndSortedItems.length} of {items.length} cover letter{items.length !== 1 ? 's' : ''}
+          {searchTerm && (
+            <span className="ml-2 text-blue-600">
+              • Searching: "{searchTerm}"
+            </span>
+          )}
         </div>
       </div>
 
@@ -203,6 +272,132 @@ export default function CoverLetters() {
           <p className="font-medium">{message}</p>
         </div>
       )}
+
+      {/* Search and Filter Section */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder="Search by job title, company, or content..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-10"
+              />
+              {searchTerm && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+
+            {/* Filter Controls */}
+            <div className="flex flex-wrap items-center gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="gap-2"
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+                {(searchTerm || statusFilter !== 'all' || sortBy !== 'date' || sortOrder !== 'desc') && (
+                  <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 text-xs">
+                    !
+                  </Badge>
+                )}
+              </Button>
+
+              {/* Quick Status Filters */}
+              <div className="flex gap-2">
+                <Button
+                  variant={statusFilter === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setStatusFilter('all')}
+                  className="gap-1"
+                >
+                  All ({filterCounts.all})
+                </Button>
+                <Button
+                  variant={statusFilter === 'completed' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setStatusFilter('completed')}
+                  className="gap-1"
+                >
+                  Completed ({filterCounts.completed})
+                </Button>
+                <Button
+                  variant={statusFilter === 'draft' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setStatusFilter('draft')}
+                  className="gap-1"
+                >
+                  Draft ({filterCounts.draft})
+                </Button>
+              </div>
+
+              {/* Clear Filters */}
+              {(searchTerm || statusFilter !== 'all' || sortBy !== 'date' || sortOrder !== 'desc') && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="gap-1 text-muted-foreground"
+                >
+                  <X className="h-4 w-4" />
+                  Clear
+                </Button>
+              )}
+            </div>
+
+            {/* Advanced Filters */}
+            {showFilters && (
+              <div className="border-t pt-4 space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Sort By */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Sort by</label>
+                    <div className="flex gap-2">
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="flex-1 px-3 py-2 border rounded-md text-sm"
+                      >
+                        <option value="date">Date Created</option>
+                        <option value="company">Company Name</option>
+                        <option value="title">Job Title</option>
+                      </select>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                        className="px-3"
+                      >
+                        {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Results Count */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Results</label>
+                    <div className="px-3 py-2 bg-muted rounded-md text-sm">
+                      Showing {filteredAndSortedItems.length} of {items.length} cover letters
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Generation Form */}
       <Card>
@@ -264,7 +459,7 @@ export default function CoverLetters() {
                 size="sm" 
                 onClick={toggleSelectAll}
               >
-                {selectedItems.length === items.length ? 'Deselect All' : 'Select All'}
+                {selectedItems.length === filteredAndSortedItems.length ? 'Deselect All' : 'Select All'}
               </Button>
             </div>
           )}
@@ -276,9 +471,25 @@ export default function CoverLetters() {
               <p>No cover letters yet. Generate your first one above!</p>
             </CardContent>
           </Card>
+        ) : filteredAndSortedItems.length === 0 ? (
+          <Card>
+            <CardContent className="pt-6 text-center text-muted-foreground space-y-3">
+              <Search className="h-12 w-12 mx-auto text-muted-foreground/50" />
+              <div>
+                <p className="font-medium">No cover letters found</p>
+                <p className="text-sm">
+                  {searchTerm ? `No results for "${searchTerm}"` : 'No cover letters match your filters'}
+                </p>
+              </div>
+              <Button variant="outline" onClick={clearFilters} className="gap-2">
+                <X className="h-4 w-4" />
+                Clear filters
+              </Button>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid gap-4">
-            {items.map((item) => (
+            {filteredAndSortedItems.map((item) => (
               <Card key={item.id} className={`group hover:shadow-md transition-all duration-200 ${
                 selectedItems.includes(item.id) ? 'ring-2 ring-primary bg-primary/5' : ''
               }`}>
