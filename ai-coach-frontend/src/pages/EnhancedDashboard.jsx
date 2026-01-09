@@ -62,7 +62,6 @@ export default function EnhancedDashboard() {
 
   useEffect(() => {
     fetchDashboardData()
-    // Set up real-time updates every 30 seconds
     const interval = setInterval(() => {
       setLastUpdated(new Date())
       fetchDashboardData()
@@ -127,7 +126,6 @@ export default function EnhancedDashboard() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Industry Insights Dashboard</h1>
@@ -141,7 +139,6 @@ export default function EnhancedDashboard() {
         </div>
       </div>
 
-      {/* Market Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-6">
@@ -208,7 +205,6 @@ export default function EnhancedDashboard() {
         </Card>
       </div>
 
-      {/* Job Categories Selector */}
       <Card>
         <CardHeader>
           <CardTitle>Tech Job Categories</CardTitle>
@@ -233,7 +229,6 @@ export default function EnhancedDashboard() {
             ))}
           </div>
           
-          {/* Selected Category Details */}
           {selectedCategoryData && (
             <div className="mt-4 p-4 bg-muted/30 rounded-lg">
               <h4 className="font-semibold mb-2">{selectedCategoryData.category} Overview</h4>
@@ -274,7 +269,6 @@ export default function EnhancedDashboard() {
         </CardContent>
       </Card>
 
-      {/* Main Content Tabs */}
       <Tabs defaultValue="salary-trends" className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="salary-trends">Salary Trends</TabsTrigger>
@@ -283,7 +277,6 @@ export default function EnhancedDashboard() {
           <TabsTrigger value="geographic">Geographic Insights</TabsTrigger>
         </TabsList>
 
-        {/* Salary Trends Tab */}
         <TabsContent value="salary-trends" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Salary Trends Chart */}

@@ -16,6 +16,7 @@ model User {
   passwordHash  String?
   industry      String?
   industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  theme         String?   @default("dark")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

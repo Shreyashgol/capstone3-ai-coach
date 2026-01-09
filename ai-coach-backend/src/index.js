@@ -6,7 +6,6 @@ import { serve } from "inngest/express";
 import { inngest, updateIndustryInsights, triggerIndustryUpdate, sendIndustryInsights } from "./services/InngestService.js";
 import { db } from "./db/prisma.js";
 
-// Import MVC routes
 import coverLetterRouter from "./routes/coverLetter.js";
 import interviewRouter from "./routes/interview.js";
 import userRouter from "./routes/user.js";
@@ -16,21 +15,44 @@ import jwtAuthRouter from "./routes/jwtAuth.js";
 
 const app = express();
 
-// CORS configuration
+const allowedOrigins = [
+  // Production origins
+  'https://ai-coach-frontend.onrender.com',
+  'https://ai-coach.onrender.com',
+  'https://capstone3-ai-coach-3to1.vercel.app',
+  // Development origins
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000',
+  'http://localhost:4001'
+];
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://ai-coach-frontend.onrender.com', 'https://ai-coach.onrender.com', 'https://capstone3-ai-coach-3to1.vercel.app', /\.vercel\.app$/]
-    : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(null, true);
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id', 'Accept'],
+  exposedHeaders: ['Set-Cookie'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "1mb" }));
+
+app.options('*', cors(corsOptions));
+
 app.use(authMiddleware);
 
-// Root route
 app.get("/", (req, res) => {
   res.json({ 
     message: "🚀 AI Coach Backend API",
@@ -48,15 +70,13 @@ app.get("/", (req, res) => {
   });
 });
 
-// API Routes - Updated to match frontend expectations
-app.use("/api/auth", jwtAuthRouter); // JWT authentication routes
+app.use("/api/auth", jwtAuthRouter); 
 app.use("/api/cover-letters", coverLetterRouter);
 app.use("/api/interview", interviewRouter);
 app.use("/api/user", userRouter);
 app.use("/api/resume", resumeRouter);
 app.use("/api/dashboard", dashboardRouter);
 
-// Inngest endpoint for background jobs
 app.use("/api/inngest", serve({
   client: inngest,
   functions: [
@@ -66,7 +86,6 @@ app.use("/api/inngest", serve({
   ]
 }));
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).json({ 
@@ -75,7 +94,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });

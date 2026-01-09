@@ -67,7 +67,6 @@ export default function CoverLetterDetail() {
     fetchCoverLetter()
   }, [id]) // Removed headers dependency to avoid unnecessary re-fetches
 
-  // Sync content when item changes (but not when editing)
   useEffect(() => {
     if (item && !editing) {
       console.log('=== SYNCING CONTENT WITH ITEM ===')
@@ -230,7 +229,7 @@ export default function CoverLetterDetail() {
                 console.log('=== CANCEL BUTTON CLICKED ===')
                 console.log('Resetting content to:', item?.content)
                 setEditing(false)
-                setContent(item.content) // Reset content to original
+                setContent(item.content)
               }}>
                 Cancel
               </Button>
@@ -267,7 +266,6 @@ export default function CoverLetterDetail() {
         </div>
       )}
 
-      {/* Debug Info - Remove this after debugging */}
       {process.env.NODE_ENV === 'development' && (
         <Card className="bg-gray-50 border-gray-200">
           <CardHeader>

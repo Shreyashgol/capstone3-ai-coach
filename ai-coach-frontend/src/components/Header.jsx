@@ -39,12 +39,12 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed top-0 w-full border-b bg-background/95 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/80 theme-transition shadow-sm">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <div className="h-12 py-1 w-auto object-contain flex items-center">
-            <h1 className="text-2xl font-bold gradient-title">AI Coach</h1>
+            <h1 className="text-2xl">crekAI</h1>
           </div>
         </Link>
 
@@ -77,10 +77,10 @@ export default function Header() {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
                 {isGrowthDropdownOpen && (
-                  <div className="absolute top-full mt-2 w-48 bg-popover border rounded-md shadow-lg z-50">
+                  <div className="absolute top-full mt-2 w-48 bg-popover border rounded-md shadow-lg z-50 theme-transition overflow-hidden">
                     <Link 
                       to="/resume" 
-                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent cursor-pointer theme-transition"
                       onClick={() => setIsGrowthDropdownOpen(false)}
                     >
                       <FileText className="h-4 w-4" />
@@ -88,7 +88,7 @@ export default function Header() {
                     </Link>
                     <Link 
                       to="/cover-letters" 
-                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent cursor-pointer theme-transition"
                       onClick={() => setIsGrowthDropdownOpen(false)}
                     >
                       <PenBox className="h-4 w-4" />
@@ -96,7 +96,7 @@ export default function Header() {
                     </Link>
                     <Link 
                       to="/interview" 
-                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent cursor-pointer theme-transition"
                       onClick={() => setIsGrowthDropdownOpen(false)}
                     >
                       <GraduationCap className="h-4 w-4" />
@@ -139,16 +139,16 @@ export default function Header() {
                 )}
               </Button>
               {isProfileDropdownOpen && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-popover border rounded-md shadow-lg z-50">
-                  <div className="flex items-center justify-start gap-3 p-3 border-b">
+                <div className="absolute top-full right-0 mt-2 w-64 bg-popover border rounded-md shadow-lg z-50 theme-transition overflow-hidden">
+                  <div className="flex items-center justify-start gap-3 p-3 border-b theme-transition">
                     {user?.imageUrl ? (
                       <img 
                         src={user.imageUrl} 
                         alt={user.name} 
-                        className="h-10 w-10 rounded-full object-cover"
+                        className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/20"
                       />
                     ) : (
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-primary/20">
                         <User className="h-5 w-5 text-primary" />
                       </div>
                     )}
@@ -166,7 +166,7 @@ export default function Header() {
                   <div className="p-1">
                     <button 
                       onClick={handleLogout} 
-                      className="cursor-pointer flex items-center gap-2 px-3 py-2 text-sm w-full hover:bg-accent rounded"
+                      className="cursor-pointer flex items-center gap-2 px-3 py-2 text-sm w-full hover:bg-accent rounded theme-transition"
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Sign out</span>

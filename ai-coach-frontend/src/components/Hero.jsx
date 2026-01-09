@@ -29,7 +29,7 @@ const HeroSection = () => {
     <section className="w-full pt-36 md:pt-48 pb-10">
       <div className="space-y-6 text-center">
         <div className="space-y-6 mx-auto">
-          <h1 className="text-5xl font-bold md:text-6xl lg:text-7xl xl:text-8xl gradient-title animate-gradient">
+          <h1 className="text-5xl font-bold md:text-6xl lg:text-7xl xl:text-8xl">
             Your AI Career Coach for
             <br />
             Professional Success

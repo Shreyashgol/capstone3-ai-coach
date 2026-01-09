@@ -1,53 +1,74 @@
 @import "tailwindcss";
 
 @theme {
+  /* Light Mode - Clean, Professional, Bright */
   --color-background: #ffffff;
-  --color-foreground: #0a0a0a;
+  --color-foreground: #09090b;
   --color-card: #ffffff;
-  --color-card-foreground: #0a0a0a;
+  --color-card-foreground: #09090b;
   --color-popover: #ffffff;
-  --color-popover-foreground: #0a0a0a;
-  --color-border: #e5e5e5;
-  --color-input: #e5e5e5;
-  --color-ring: #0a0a0a;
-  --color-primary: #171717;
-  --color-primary-foreground: #fafafa;
-  --color-secondary: #f5f5f5;
-  --color-secondary-foreground: #171717;
-  --color-muted: #f5f5f5;
-  --color-muted-foreground: #737373;
-  --color-accent: #f5f5f5;
-  --color-accent-foreground: #171717;
+  --color-popover-foreground: #09090b;
+  --color-border: #e4e4e7;
+  --color-input: #e4e4e7;
+  --color-ring: #3b82f6;
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #18181b;
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #71717a;
+  --color-accent: #f0f9ff;
+  --color-accent-foreground: #0c4a6e;
   --color-destructive: #ef4444;
-  --color-destructive-foreground: #fafafa;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #22c55e;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6;
+  --color-info-foreground: #ffffff;
   --radius: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 }
 
 .dark {
-  --color-background: #0a0a0a;
+  /* Dark Mode - Rich, Vibrant, Modern */
+  --color-background: #09090b;
   --color-foreground: #fafafa;
-  --color-card: #0a0a0a;
+  --color-card: #18181b;
   --color-card-foreground: #fafafa;
-  --color-popover: #0a0a0a;
+  --color-popover: #18181b;
   --color-popover-foreground: #fafafa;
-  --color-border: #262626;
-  --color-input: #262626;
-  --color-ring: #d4d4d8;
-  --color-primary: #fafafa;
-  --color-primary-foreground: #171717;
-  --color-secondary: #262626;
+  --color-border: #27272a;
+  --color-input: #27272a;
+  --color-ring: #60a5fa;
+  --color-primary: #3b82f6;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #27272a;
   --color-secondary-foreground: #fafafa;
-  --color-muted: #262626;
-  --color-muted-foreground: #a3a3a3;
-  --color-accent: #262626;
-  --color-accent-foreground: #fafafa;
-  --color-destructive: #7f1d1d;
-  --color-destructive-foreground: #fafafa;
+  --color-muted: #27272a;
+  --color-muted-foreground: #a1a1aa;
+  --color-accent: #1e3a8a;
+  --color-accent-foreground: #bfdbfe;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #16a34a;
+  --color-success-foreground: #ffffff;
+  --color-warning: #d97706;
+  --color-warning-foreground: #ffffff;
+  --color-info: #2563eb;
+  --color-info-foreground: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
   
   html {
@@ -68,14 +89,55 @@
     height: 100%;
     min-height: 100vh;
   }
+
+  /* Enhanced scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-muted);
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted-foreground);
+  }
+
+  /* Light mode specific enhancements */
+  .light {
+    --gradient-from: #3b82f6;
+    --gradient-to: #8b5cf6;
+  }
+
+  /* Dark mode specific enhancements */
+  .dark {
+    --gradient-from: #60a5fa;
+    --gradient-to: #a78bfa;
+  }
 }
 
 @layer utilities {
   .gradient-title {
-    @apply bg-gradient-to-b from-gray-400 via-gray-200 to-gray-600 font-extrabold tracking-tighter text-transparent bg-clip-text pb-2 pr-2;
+    @apply font-extrabold tracking-tighter text-transparent bg-clip-text pb-2 pr-2;
+    background: linear-gradient(to bottom, var(--gradient-from), var(--gradient-to));
   }
+  
   .gradient {
-    @apply bg-gradient-to-r from-primary to-primary/70;
+    background: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:scale-[1.02];
+  }
+  
+  .theme-transition {
+    @apply transition-colors duration-300 ease-in-out;
   }
   .hero-image-wrapper { 
     perspective: 1000px; 
@@ -88,18 +150,21 @@
   .hero-image.scrolled { 
     transform: rotateX(0deg) scale(1) translateY(40px); 
   }
+  
   .grid-background { 
     position: fixed; 
     top: 0; 
     left: 0; 
     width: 100%; 
     height: 100%; 
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px); 
+    background: linear-gradient(to right, var(--color-border) 1px, transparent 1px), 
+                linear-gradient(to bottom, var(--color-border) 1px, transparent 1px); 
     background-size: 50px 50px; 
     pointer-events: none; 
     z-index: -1; 
+    opacity: 0.5;
   }
+  
   .grid-background::before { 
     content: ""; 
     position: absolute; 
@@ -107,7 +172,7 @@
     left: 0; 
     width: 100%; 
     height: 100%; 
-    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.9)); 
+    background: radial-gradient(circle, transparent 40%, var(--color-background) 100%); 
   }
   
   /* Additional utility classes */
@@ -119,7 +184,39 @@
   }
   
   .shadow-xs {
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .shadow-card-hover {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  /* Animated gradient background */
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+  
+  /* Glow effect for dark mode */
+  .dark .glow-effect {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  
+  .light .glow-effect {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
   }
 }
 
