@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import GoogleAuthButton from "../../components/auth/GoogleAuthButton";
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
@@ -11,7 +12,7 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -38,6 +39,21 @@ export default function SignUpPage() {
       setError(result.error);
     }
     
+    setLoading(false);
+  };
+
+  const handleGoogleSignUp = async (credential) => {
+    setError("");
+    setLoading(true);
+
+    const result = await loginWithGoogle(credential);
+
+    if (result.success) {
+      navigate(result.isNewUser ? "/onboarding" : "/dashboard");
+    } else {
+      setError(result.error);
+    }
+
     setLoading(false);
   };
 
@@ -142,6 +158,27 @@ export default function SignUpPage() {
           </button>
         </form>
 
+        <div className="space-y-4">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">Or sign up with</span>
+            </div>
+          </div>
+
+          <GoogleAuthButton
+            mode="signup"
+            loading={loading}
+            onCredential={handleGoogleSignUp}
+          />
+
+          <p className="text-center text-xs text-muted-foreground">
+            New Google users will be guided through onboarding after account creation.
+          </p>
+        </div>
+
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
             Already have an account?{" "}
@@ -157,5 +194,4 @@ export default function SignUpPage() {
     </div>
   );
 }
-
 

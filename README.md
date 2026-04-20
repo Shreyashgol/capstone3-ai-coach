@@ -8,7 +8,7 @@ AI-powered career coaching app with a React frontend and an Express/Prisma backe
 - Backend: Node.js, Express, Prisma
 - Database: PostgreSQL
 - AI: Google Generative AI
-- Auth: JWT
+- Auth: JWT + Google OAuth
 
 ## Project Structure
 
@@ -78,6 +78,7 @@ Backend example:
 DATABASE_URL="postgresql://username:password@localhost:5432/ai_coach_db"
 GEMINI_API_KEY="your_gemini_api_key"
 JWT_SECRET="replace_with_a_secure_random_secret"
+GOOGLE_CLIENT_ID="your_google_oauth_web_client_id"
 CORS_ORIGINS="https://your-frontend-domain.com"
 NODE_ENV="development"
 PORT=4001
@@ -87,6 +88,7 @@ Frontend local development:
 
 ```env
 VITE_API_URL="http://localhost:4001"
+VITE_GOOGLE_CLIENT_ID="your_google_oauth_web_client_id"
 ```
 
 ## Deployment
@@ -98,6 +100,7 @@ Required backend environment variables:
 - `DATABASE_URL`
 - `GEMINI_API_KEY` or `GOOGLE_AI_API_KEY`
 - `JWT_SECRET`
+- `GOOGLE_CLIENT_ID` for Google sign-in and sign-up
 - `NODE_ENV`
 - `PORT`
 - `CORS_ORIGINS` for your deployed frontend origin
@@ -105,6 +108,7 @@ Required backend environment variables:
 Required frontend environment variables:
 
 - `VITE_API_URL`
+- `VITE_GOOGLE_CLIENT_ID`
 
 ## API Overview
 
@@ -113,9 +117,17 @@ Authentication:
 ```text
 POST /api/auth/register
 POST /api/auth/login
+POST /api/auth/google
 GET  /api/auth/me
 POST /api/auth/logout
 ```
+
+## Google OAuth Setup
+
+1. Create a Google OAuth Web application in Google Cloud Console.
+2. Add your frontend origin, for example `http://localhost:5173`, to Authorized JavaScript origins.
+3. Copy the client ID into both `ai-coach-backend/.env` as `GOOGLE_CLIENT_ID` and `ai-coach-frontend/.env` as `VITE_GOOGLE_CLIENT_ID`.
+4. Restart both servers after updating environment variables.
 
 Resume:
 

@@ -1,16 +1,41 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import { UserModel } from '../models/index.js';
 
 class AuthController {
+  static googleClient = null;
+
   static generateToken(userId) {
     const secret = process.env.JWT_SECRET || 'dev_secret';
     return jwt.sign({ userId }, secret, { expiresIn: '7d' });
   }
 
+  static normalizeEmail(email) {
+    return typeof email === 'string' ? email.trim().toLowerCase() : '';
+  }
+
+  static serializeUser(user) {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      imageUrl: user.imageUrl
+    };
+  }
+
+  static getGoogleClient() {
+    if (!AuthController.googleClient) {
+      AuthController.googleClient = new OAuth2Client();
+    }
+
+    return AuthController.googleClient;
+  }
+
   static async register(req, res) {
     try {
-      const { email, password, name } = req.body;
+      const { password, name } = req.body;
+      const email = AuthController.normalizeEmail(req.body.email);
 
       if (!email || !password || !name) {
         return res.status(400).json({ 
@@ -42,17 +67,10 @@ class AuthController {
 
       const token = AuthController.generateToken(user.id);
 
-      const userResponse = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        imageUrl: user.imageUrl
-      };
-
       res.status(201).json({ 
         message: 'User registered successfully',
         token,
-        user: userResponse
+        user: AuthController.serializeUser(user)
       });
     } catch (error) {
       console.error('Registration error:', error);
@@ -64,7 +82,8 @@ class AuthController {
 
   static async login(req, res) {
     try {
-      const { email, password } = req.body;
+      const { password } = req.body;
+      const email = AuthController.normalizeEmail(req.body.email);
 
       if (!email || !password) {
         return res.status(400).json({ 
@@ -88,22 +107,93 @@ class AuthController {
 
       const token = AuthController.generateToken(user.id);
 
-      const userResponse = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        imageUrl: user.imageUrl
-      };
-
       res.json({ 
         message: 'Login successful',
         token,
-        user: userResponse
+        user: AuthController.serializeUser(user)
       });
     } catch (error) {
       console.error('Login error:', error);
       res.status(500).json({ 
         error: 'Failed to login' 
+      });
+    }
+  }
+
+  static async googleAuth(req, res) {
+    try {
+      const { credential } = req.body;
+      const googleClientId = process.env.GOOGLE_CLIENT_ID;
+
+      if (!googleClientId) {
+        return res.status(500).json({
+          error: 'Google OAuth is not configured on the server'
+        });
+      }
+
+      if (!credential) {
+        return res.status(400).json({
+          error: 'Google credential is required'
+        });
+      }
+
+      const client = AuthController.getGoogleClient();
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: googleClientId
+      });
+
+      const payload = ticket.getPayload();
+      const email = AuthController.normalizeEmail(payload?.email);
+
+      if (!payload || !email) {
+        return res.status(400).json({
+          error: 'Google account is missing a valid email address'
+        });
+      }
+
+      if (!payload.email_verified) {
+        return res.status(403).json({
+          error: 'Please use a Google account with a verified email address'
+        });
+      }
+
+      let user = await UserModel.findByEmail(email);
+      let isNewUser = false;
+
+      if (!user) {
+        user = await UserModel.create({
+          email,
+          name: payload.name || email.split('@')[0],
+          imageUrl: payload.picture || null,
+          passwordHash: null,
+          clerkUserId: ''
+        });
+        isNewUser = true;
+      } else {
+        const shouldUpdateName = !user.name && payload.name;
+        const shouldUpdateImage = !user.imageUrl && payload.picture;
+
+        if (shouldUpdateName || shouldUpdateImage) {
+          user = await UserModel.update(user.id, {
+            ...(shouldUpdateName ? { name: payload.name } : {}),
+            ...(shouldUpdateImage ? { imageUrl: payload.picture } : {})
+          });
+        }
+      }
+
+      const token = AuthController.generateToken(user.id);
+
+      res.json({
+        message: isNewUser ? 'Google signup successful' : 'Google login successful',
+        token,
+        user: AuthController.serializeUser(user),
+        isNewUser
+      });
+    } catch (error) {
+      console.error('Google auth error:', error);
+      res.status(401).json({
+        error: 'Google authentication failed'
       });
     }
   }

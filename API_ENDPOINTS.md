@@ -63,7 +63,31 @@ Authorization: Bearer <token>
 }
 ```
 
-### 3. Get Current User
+### 3. Google OAuth Login / Signup
+- **Endpoint**: `POST /api/auth/google`
+- **Description**: Login or sign up with a Google credential and receive the app JWT
+- **Authentication**: Not required
+- **Request Body**:
+```json
+{
+  "credential": "google_id_token"
+}
+```
+- **Response** (200):
+```json
+{
+  "token": "jwt_token_here",
+  "user": {
+    "id": "user_id",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "imageUrl": "https://example.com/avatar.jpg"
+  },
+  "isNewUser": true
+}
+```
+
+### 4. Get Current User
 - **Endpoint**: `GET /api/auth/me`
 - **Description**: Get currently authenticated user details
 - **Authentication**: Required
@@ -80,7 +104,7 @@ Authorization: Bearer <token>
 }
 ```
 
-### 4. Logout User
+### 5. Logout User
 - **Endpoint**: `POST /api/auth/logout`
 - **Description**: Logout current user
 - **Authentication**: Required
@@ -91,7 +115,7 @@ Authorization: Bearer <token>
 }
 ```
 
-### 5. Sync User Data
+### 6. Sync User Data
 - **Endpoint**: `POST /api/auth/sync`
 - **Description**: Sync user data from external auth provider
 - **Authentication**: Required

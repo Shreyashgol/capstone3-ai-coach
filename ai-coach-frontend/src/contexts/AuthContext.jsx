@@ -44,14 +44,18 @@ const AuthProvider = ({ children }) => {
     checkAuth();
   }, [token]);
 
+  const setAuthSession = (userToken, userData) => {
+    localStorage.setItem('token', userToken);
+    setToken(userToken);
+    setUser(userData);
+  };
+
   const login = async (email, password) => {
     try {
       const response = await api.post('/api/auth/login', { email, password });
       const { token: userToken, user: userData } = response.data;
-      
-      localStorage.setItem('token', userToken);
-      setToken(userToken);
-      setUser(userData);
+
+      setAuthSession(userToken, userData);
       
       return { success: true };
     } catch (error) {
@@ -71,10 +75,8 @@ const AuthProvider = ({ children }) => {
         name 
       });
       const { token: userToken, user: userData } = response.data;
-      
-      localStorage.setItem('token', userToken);
-      setToken(userToken);
-      setUser(userData);
+
+      setAuthSession(userToken, userData);
       
       return { success: true };
     } catch (error) {
@@ -82,6 +84,23 @@ const AuthProvider = ({ children }) => {
       return { 
         success: false, 
         error: error.response?.data?.error || 'Registration failed' 
+      };
+    }
+  };
+
+  const loginWithGoogle = async (credential) => {
+    try {
+      const response = await api.post('/api/auth/google', { credential });
+      const { token: userToken, user: userData, isNewUser } = response.data;
+
+      setAuthSession(userToken, userData);
+
+      return { success: true, isNewUser: !!isNewUser };
+    } catch (error) {
+      console.error('Google login failed:', error);
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Google login failed'
       };
     }
   };
@@ -105,6 +124,7 @@ const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
+    loginWithGoogle,
     logout,
     isAuthenticated: !!user
   };
@@ -117,4 +137,3 @@ const AuthProvider = ({ children }) => {
 };
 
 export { useAuth, AuthProvider };
-
