@@ -72,6 +72,22 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/health", async (_req, res) => {
+  try {
+    await db.$queryRaw`SELECT 1`;
+    res.json({
+      ok: true,
+      database: "connected"
+    });
+  } catch (error) {
+    console.error("Health check failed:", error);
+    res.status(503).json({
+      ok: false,
+      database: "disconnected"
+    });
+  }
+});
+
 app.use("/api/auth", jwtAuthRouter); 
 app.use("/api/cover-letters", coverLetterRouter);
 app.use("/api/interview", interviewRouter);
