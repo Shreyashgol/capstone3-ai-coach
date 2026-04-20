@@ -16,22 +16,24 @@ import jwtAuthRouter from "./routes/jwtAuth.js";
 const app = express();
 
 const allowedOrigins = [
-  // Production origins
-  'https://ai-coach-frontend.onrender.com',
-  'https://ai-coach.onrender.com',
-  'https://capstone3-ai-coach-3to1.vercel.app',
-  // Development origins
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
   'http://localhost:4001'
 ];
 
+const configuredOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const resolvedAllowedOrigins = [...new Set([...allowedOrigins, ...configuredOrigins])];
+
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+    if (resolvedAllowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
@@ -103,4 +105,3 @@ const port = process.env.PORT || 4001;
 app.listen(port, () => {
   console.log(`🚀 AI Coach Backend running on http://localhost:${port}`);
 });
-

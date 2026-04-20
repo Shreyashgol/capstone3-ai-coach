@@ -1,7 +1,7 @@
 # 📡 AI Coach - API Endpoints Documentation
 
 ## Base URL
-- **Production**: `https://capstone3-ai-coach-1.onrender.com`
+- **Production**: `https://your-api-domain.com`
 - **Development**: `http://localhost:4001`
 
 ## Authentication
@@ -826,7 +826,7 @@ All endpoints may return the following error responses:
 
 ### Example Request with Authentication
 ```bash
-curl -X GET https://capstone3-ai-coach-1.onrender.com/api/user/preferences \
+curl -X GET https://your-api-domain.com/api/user/preferences \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
   -H "Content-Type: application/json"
 ```
@@ -846,12 +846,11 @@ curl -X GET https://capstone3-ai-coach-1.onrender.com/api/user/preferences \
 
 ## 🌐 CORS Configuration
 
-Allowed origins:
+Allowed origins are configured by the backend at runtime:
 - `http://localhost:5173` (Development)
 - `http://localhost:5174` (Development)
 - `http://localhost:3000` (Development)
-- `https://capstone3-ai-coach-3to1.vercel.app` (Production)
-- `https://*.vercel.app` (Vercel deployments)
+- `CORS_ORIGINS` environment variable (Production)
 
 ---
 
