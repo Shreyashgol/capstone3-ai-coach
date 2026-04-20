@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { db } from "../db/prisma.js";
+import { UserModel } from "../models/User.js";
 
 const router = Router();
 
@@ -31,10 +32,8 @@ router.post('/update', async (req, res) => {
     if (!existing) return res.status(404).json({ error: "User not found" });
 
     const { industry, experience, bio, skills } = req.body || {};
-    const updated = await db.user.update({
-      where: { id: existing.id },
-      data: { industry, experience, bio, skills }
-    });
+    const updateData = { industry, experience, bio, skills };
+    const updated = await UserModel.update(existing.id, updateData);
     res.json(updated);
   } catch (err) {
     console.error(err);
@@ -87,4 +86,3 @@ router.put('/preferences', async (req, res) => {
 });
 
 export default router;
-

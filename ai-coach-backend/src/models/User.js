@@ -1,6 +1,32 @@
 import { db } from '../db/prisma.js';
 
 export class UserModel {
+  static async ensureIndustryInsight(industry) {
+    if (!industry) return;
+
+    const normalizedIndustry = typeof industry === 'string' ? industry.trim() : industry;
+    if (!normalizedIndustry) return;
+
+    const nextUpdate = new Date();
+    nextUpdate.setDate(nextUpdate.getDate() + 7);
+
+    await db.industryInsight.upsert({
+      where: { industry: normalizedIndustry },
+      update: {},
+      create: {
+        industry: normalizedIndustry,
+        salaryRanges: [],
+        growthRate: 0,
+        demandLevel: 'Unknown',
+        topSkills: [],
+        marketOutlook: 'Insights pending generation.',
+        keyTrends: [],
+        recommendedSkills: [],
+        nextUpdate
+      }
+    });
+  }
+
   static async findById(id) {
     return await db.user.findUnique({
       where: { id },
@@ -59,6 +85,13 @@ export class UserModel {
   }
 
   static async update(id, updateData) {
+    if (updateData.industry !== undefined) {
+      await UserModel.ensureIndustryInsight(updateData.industry);
+      if (typeof updateData.industry === 'string') {
+        updateData.industry = updateData.industry.trim();
+      }
+    }
+
     return await db.user.update({
       where: { id },
       data: updateData,
@@ -92,9 +125,11 @@ export class UserModel {
   }
 
   static async updateIndustry(userId, industry) {
+    await UserModel.ensureIndustryInsight(industry);
+
     return await db.user.update({
       where: { id: userId },
-      data: { industry },
+      data: { industry: typeof industry === 'string' ? industry.trim() : industry },
       select: {
         id: true,
         email: true,
